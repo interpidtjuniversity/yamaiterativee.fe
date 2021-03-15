@@ -13,12 +13,12 @@ class UserActInfo extends Component {
 
     render() {
         return (
-            <div>
+            <div className="user-act-info-container">
                 <div className="user-avatar">
-                    <Avatar src={this.avatarSrc} shape="circle" size="small"/>
+                    <Avatar src={this.avatarSrc} shape="circle" size="medium"/>
                 </div>
                 <div className="user-action">{this.actionInfo}</div>
-                <div className="user-action">{this.extInfo}</div>
+                {/*<div className="user-action">{this.extInfo}</div>*/}
             </div>
         )
     }

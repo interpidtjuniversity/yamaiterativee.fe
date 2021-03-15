@@ -216,13 +216,11 @@ export default {
     groups: [{
         id: 'group',
         options: {
-            title: '张启帆 给MR：#999999 的源分支提交代码触发了Pipeline #10000000\n' +
-                '\n' +
-                '3天前'
+            title: 'E123456789_zqf0304_dev -> E123456789_20210304'
         },
         draggable:false,
-        top: 50,
-        left: 150,
+        top: 0,
+        left: 130,
         width: 1100,
         height: 225,
         resize: true

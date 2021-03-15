@@ -2,6 +2,8 @@ import { List, Avatar } from '@alifd/next';
 import React, {Component} from "react";
 import axios from "axios";
 
+import store from "../../store/config";
+
 class Steps extends Component {
 
     constructor(props) {
@@ -24,10 +26,17 @@ class Steps extends Component {
                 _this.setState({
                     data: response.data
                 })
-                debugger
             })
             .catch(function (error){
             })
+    }
+
+    openStepLog(stageId, execId, title) {
+        debugger
+        const data = "stageId is:" + stageId + " execId is:" + execId + " title is:" + title
+        console.log(data)
+        store.getState().onOpen(data,data)
+        //console.log(store.getState())
     }
 
     render() {
@@ -40,7 +49,9 @@ class Steps extends Component {
                         <List.Item
                             key={i}
                             title={item.title}
-                            media={<Avatar src={item.img} />}
+                            media={<Avatar src={item.img}
+                            onClick={this.openStepLog(this.stageId, this.execId, item.title)}
+                            />}
                         >
                         </List.Item>
                     )}
