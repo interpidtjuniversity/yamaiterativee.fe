@@ -1,17 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+
+import IterationEnv from "./iteration/env/env"
+import Pipeline from "./iteration/pipeline/pipeline";
+import Steps from "./iteration/pipeline/steps_container";
+
+import 'antd/dist/antd.css';
+import './static/css/iteration/pipeline/iconfont.css';
+import './static/css/iteration/pipeline/newIconfont.css';
+
+import classic_mr_Data from './data/iteration/pipeline/classic_mr';
+import server_apply_Data from "./data/iteration/pipeline/server_apply";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <IterationEnv/>
+      {/*<Pipeline pipelineData={server_apply_Data} pipelineDataCanvasId="1"/>*/}
+      <Pipeline pipelineData={classic_mr_Data} pipelineDataCanvasId="2"/>
   </React.StrictMode>,
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+
