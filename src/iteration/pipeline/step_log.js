@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Drawer } from '@alifd/next';
+import { Drawer } from '@alifd/next';
 
 
 
@@ -8,6 +8,7 @@ class StepLog extends Component {
         visible: false,
         title: "",
         log: "",
+        width : 1000,
     };
 
     onOpen = (t, l) => {
@@ -38,7 +39,8 @@ class StepLog extends Component {
                     title={this.state.title}
                     placement="right"
                     visible={this.state.visible}
-                    onClose={this.onClose}>
+                    onClose={this.onClose}
+                    width={this.state.width}>
                     {this.state.log}
                 </Drawer>
             </div>

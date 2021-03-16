@@ -1,1 +1,5 @@
-export const Set = 'Set'
+export const SetStepLogRef = 'SetStepLogRef'
+
+export const StepLogRefInitialState = {
+    stepLogRef: undefined
+}

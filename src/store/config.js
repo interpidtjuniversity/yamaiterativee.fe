@@ -2,13 +2,13 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
-import stepLogReducer from './reducers/steplog_reducer'
+import reducers from "./reducers/config";
 
 const middlewares = [
     thunkMiddleware,
     createLogger()
 ]
 
-const store = createStore(stepLogReducer, applyMiddleware(...middlewares))
+const store = createStore(reducers, applyMiddleware(...middlewares))
 
 export default store

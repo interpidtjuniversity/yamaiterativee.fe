@@ -13,7 +13,6 @@ class Stage extends Node {
   }
 
   draw(opts) {
-    debugger
     const container = $('<div class="schedule-base-node"></div>')
         .attr('id', opts.id)
         .css('top', opts.top + 'px')

@@ -1,10 +1,13 @@
-// src/reducers/counter.js
-import { Set } from '../constants/steplog_const'
+import { SetStepLogRef } from '../constants/steplog_const'
+import { StepLogRefInitialState } from "../constants/steplog_const";
 
-export default function stepLogReducer (state = undefined, action) {
+export default function stepLogReducer (state = StepLogRefInitialState, action) {
     switch (action.type) {
-        case Set:
-            return action.stepRef
+        case SetStepLogRef:
+            return {
+                ...state,
+                stepLogRef: action.stepRef
+            }
         default:
             return state
     }

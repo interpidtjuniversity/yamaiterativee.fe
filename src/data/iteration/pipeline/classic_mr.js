@@ -223,6 +223,6 @@ export default {
         left: 130,
         width: 1100,
         height: 225,
-        resize: true
+        resize: false
     }],
 };

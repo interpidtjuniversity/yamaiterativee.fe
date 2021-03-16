@@ -6,7 +6,7 @@ import '../../static/css/iteration/pipeline/steps_container.css'
 import Steps from "./steps";
 
 
-class StepsContainer extends React.Component {
+class StepsContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {

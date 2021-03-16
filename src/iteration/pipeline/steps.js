@@ -18,7 +18,6 @@ class Steps extends Component {
     }
 
     componentDidMount() {
-        debugger
         const _this = this
         axios.get(this.baseRequestUrl)
             .then(function (response) {
@@ -32,11 +31,9 @@ class Steps extends Component {
     }
 
     openStepLog(stageId, execId, title) {
-        debugger
         const data = "stageId is:" + stageId + " execId is:" + execId + " title is:" + title
-        console.log(data)
-        store.getState().onOpen(data,data)
-        //console.log(store.getState())
+        let stepLog = store.getState().stepLogReducer.stepLogRef
+        stepLog.onOpen(data,data)
     }
 
     render() {
@@ -50,7 +47,7 @@ class Steps extends Component {
                             key={i}
                             title={item.title}
                             media={<Avatar src={item.img}
-                            onClick={this.openStepLog(this.stageId, this.execId, item.title)}
+                            onClick={() => this.openStepLog(this.stageId, this.execId, item.title)}
                             />}
                         >
                         </List.Item>

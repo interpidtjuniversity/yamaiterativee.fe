@@ -1,6 +1,9 @@
 export default {
     nodes: [
         {
+            stageId_execId: '8_1',
+            stageId: '8',
+            execId: '1',
             id: '1',
             label: '机器变更',
             className: 'icon-background-color',
@@ -15,6 +18,9 @@ export default {
             }]
         },
         {
+            stageId_execId: '9_1',
+            stageId: '9',
+            execId: '1',
             id: '2',
             label: '镜像构建',
             className: 'icon-background-color',
@@ -36,6 +42,9 @@ export default {
             ]
         },
         {
+            stageId_execId: '10_1',
+            stageId: '10',
+            execId: '1',
             id: '3',
             label: '发布',
             className: 'icon-background-color',
@@ -78,10 +87,10 @@ export default {
                 '3天前'
         },
         draggable:false,
-        top: 100,
-        left: 150,
+        top: 0,
+        left: 130,
         width: 750,
         height: 150,
-        resize: true
+        resize: false
     }],
 };

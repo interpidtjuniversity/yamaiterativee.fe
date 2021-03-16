@@ -1,4 +1,4 @@
-import { Avatar, Icon } from '@alifd/next';
+import { Avatar } from '@alifd/next';
 import React, { Component } from 'react'
 import "../../static/css/iteration/pipeline/user_act_info.css"
 

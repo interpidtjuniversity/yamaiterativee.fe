@@ -10,16 +10,16 @@ import StepsContainer from "./steps_container";
 
 
 class Pipeline extends Component {
-    pipelineData;
     pipelineDataCanvasId;
 
     constructor(props) {
         super(props);
-        for (let i = 0; i < props.pipelineData['nodes'].length; i++) {
-            props.pipelineData['nodes'][i].Class = Stage;
+        this.pipelineData = props.pipelineData
+        for (let i = 0; i < this.pipelineData['nodes'].length; i++) {
+            this.pipelineData['nodes'][i].Class = Stage;
         }
-        for (let i = 0; i < props.pipelineData['edges'].length; i++) {
-            props.pipelineData['edges'][i].Class = BaseEdge;
+        for (let i = 0; i < this.pipelineData['edges'].length; i++) {
+            this.pipelineData['edges'][i].Class = BaseEdge;
         }
     }
     componentDidMount() {
@@ -37,7 +37,7 @@ class Pipeline extends Component {
                 }
             }
         });
-        this.canvas.draw(this.props.pipelineData);
+        this.canvas.draw(this.pipelineData);
         this.canvas.on('events', (event) => {
             if (event['type'] === "node:click") {
                 debugger
@@ -54,9 +54,10 @@ class Pipeline extends Component {
 
 
     render() {
+        debugger
         return (
             <div className='schedule'>
-                <UserActInfo avatarSrc="https://img.alicdn.com/tfs/TB1QS.4l4z1gK0jSZSgXXavwpXa-1024-1024.png" size="medium" actionInfo="张启帆 给MR：#999999 的源分支提交代码触发了Pipeline #10000000"/>
+                <UserActInfo avatarSrc={this.props.pipelineData.avatarSrc} size="medium" actionInfo={this.props.pipelineData.actionInfo} extInfo={this.props.pipelineData.extInfo}/>
                 <div className="schedule-canvas" id={this.props.pipelineDataCanvasId}>
                 </div>
             </div>
