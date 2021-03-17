@@ -44,6 +44,7 @@ class Pipeline extends Component {
                 const stageId_execId = event['node']['options']['stageId_execId'];
                 const stageId = event['node']['options']['stageId'];
                 const execId = event['node']['options']['execId'];
+                // this div look { @stage.js line40 }
                 const div = document.getElementById(stageId_execId);
                 ReactDOM.render(<StepsContainer stageId_execId={stageId_execId} stageId={stageId} execId={execId}/>
                     , div);

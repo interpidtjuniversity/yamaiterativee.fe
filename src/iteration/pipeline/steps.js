@@ -1,8 +1,10 @@
-import { List, Avatar } from '@alifd/next';
+import { List } from '@alifd/next';
 import React, {Component} from "react";
 import axios from "axios";
 
 import store from "../../store/config";
+
+import Step from "./step"
 
 class Steps extends Component {
 
@@ -38,19 +40,12 @@ class Steps extends Component {
 
     render() {
         return (
-            <div style={{ width: 288 }}>
+            <div style={{ width: 250 }}>
                 <List
                     size="small"
                     dataSource={this.state.data}
                     renderItem={(item, i) => (
-                        <List.Item
-                            key={i}
-                            title={item.title}
-                            media={<Avatar src={item.img}
-                            onClick={() => this.openStepLog(this.stageId, this.execId, item.title)}
-                            />}
-                        >
-                        </List.Item>
+                        <Step key={i} title={item.title} stepImgSrc={item.img} stageId={this.stageId} execId={this.execId}/>
                     )}
                 />
             </div>
@@ -59,3 +54,7 @@ class Steps extends Component {
 }
 
 export default Steps
+
+/**
+ * <Icon type="loading" />
+ * */

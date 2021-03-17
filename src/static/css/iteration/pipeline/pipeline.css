@@ -3,7 +3,7 @@
     height: 300px;
     margin-left: 250px;
     margin-top: 10px;
-    background: cyan;
+    /*background: #00ffff;*/
 }
 .schedule .schedule-canvas {
     width: 100%;

@@ -36,6 +36,7 @@ class Stage extends Node {
     $('<span class="text-box"></span>').text(this.options.label).appendTo(dom);
   }
 
+  // look { @pipeline.js line48 }
   _createSteps(dom = this.dom) {
     const steps = $(`<div id="${this.stageId_execId}"/>`)[0];
     steps.ref = this.stageId_execId
