@@ -4,6 +4,7 @@ import '@alifd/next/dist/next.css';
 import axios from "axios";
 import store from "../../store/config";
 import {SetIterEnvPipelineInfo} from "../../store/constants/iter_env_pipelineinfo_const";
+import {SetIterEnvActionInfo} from "../../store/constants/iter_env_action_const";
 
 const envMap = new Map([[0, 'dev'], [1, 'itg'], [2, 'pre'], [3, 'grayscale'], [4, 'release']]);
 
@@ -14,6 +15,7 @@ class IterationEnv extends Component{
         this.iterationId = this.props.iterationId
         this.baseRequestUrl = "/api/v1/iteration/"+this.iterationId+"/info"
         this.pipelineRequestUrl = "/api/v1/iteration/"+this.iterationId+"/"
+        this.actionRequestUrl = "api/v1/iteration/action/"
     }
 
     state = {
@@ -38,6 +40,19 @@ class IterationEnv extends Component{
                     current: cur
                 })
 
+                //get env action
+                axios.get(_this.actionRequestUrl+_envMap.get(cur))
+                    .then(function (envActionInfo){
+                        store.dispatch({
+                            type: SetIterEnvActionInfo,
+                            iterEnvActionInfo: envActionInfo.data,
+                        })
+                    })
+                    .catch(function (error){})
+
+                // get env base
+
+
                 // get env pipeline
                 axios.get(_this.pipelineRequestUrl+_envMap.get(cur))
                     .then(function (envPipelineInfo){
@@ -60,6 +75,18 @@ class IterationEnv extends Component{
         if (status!=='wait') {
             const _this = this
             const _envMap = envMap
+
+            //get env action
+            axios.get(_this.actionRequestUrl+_envMap.get(index))
+                .then(function (envActionInfo){
+                    store.dispatch({
+                        type: SetIterEnvActionInfo,
+                        iterEnvActionInfo: envActionInfo.data,
+                    })
+                })
+                .catch(function (error){})
+
+            // get env pipeline
             axios.get(_this.pipelineRequestUrl+_envMap.get(index))
                 .then(function (envPipelineInfo){
                     store.dispatch({

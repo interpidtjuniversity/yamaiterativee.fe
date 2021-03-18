@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 import IterationEnv from "./iteration/env/env"
+import IterAction from "./iteration/action/IterAction";
 import Pipeline from "./iteration/pipeline/pipeline";
 import StepLog from "./iteration/pipeline/step_log";
+import IterEnvInfo from "./iteration/info/IterEnvInfo";
 
 
 import 'antd/dist/antd.css';
+import '@alifd/next/dist/next.css';
 import './static/css/iteration/pipeline/iconfont.css';
 import './static/css/iteration/pipeline/newIconfont.css';
 
@@ -36,8 +39,8 @@ class IterationPage extends Component {
     }
 
     componentDidMount() {
-        let w = watch(store.getState, 'iterEnvPipelineInfoReducer.iterEnvPipelineInfo')
-        store.subscribe(w((newVal, oldVal, objectPath) => {
+        let iterEnvPipelineInfoWatcher = watch(store.getState, 'iterEnvPipelineInfoReducer.iterEnvPipelineInfo')
+        store.subscribe(iterEnvPipelineInfoWatcher((newVal, oldVal, objectPath) => {
             console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
             let iterEnvPipelineInfoMountDiv = document.getElementById("iterEnvPipelineInfoMountDiv")
             ReactDOM.unmountComponentAtNode(iterEnvPipelineInfoMountDiv)
@@ -46,6 +49,15 @@ class IterationPage extends Component {
             })
             ReactDOM.render(pipelines, iterEnvPipelineInfoMountDiv)
         }))
+
+        let iterEnvActionInfoWatcher = watch(store.getState, 'iterEnvActionInfoReducer.iterEnvActionInfo')
+        store.subscribe(iterEnvActionInfoWatcher((newVal, oldVal, objectPath) => {
+            console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
+            let iterEnvActionInfoMountDiv = document.getElementById("iterEnvActionInfoMountDiv")
+            ReactDOM.unmountComponentAtNode(iterEnvActionInfoMountDiv)
+            let actions = <IterAction actionData={newVal}/>
+            ReactDOM.render(actions, iterEnvActionInfoMountDiv)
+        }))
     }
 
     render() {
@@ -53,10 +65,16 @@ class IterationPage extends Component {
             <div>
                 <IterationEnv iterationId={this.iterationId}/>
                 <StepLog onRef={this.stepLogOnRef}/>
-                <div id="iterEnvPipelineInfoMountDiv"/>
-                {/*<Pipeline pipelineData={server_apply_Data} stepLogRef={this.stepLogRef} pipelineDataCanvasId={1}/>*/}
-                {/*<Pipeline pipelineData={classic_mr_Data} stepLogRef={this.stepLogRef} pipelineDataCanvasId={2}/>*/}
 
+                {/*挂载操作按钮*/}
+                <div id={"iterEnvActionInfoMountDiv"}/>
+
+                <IterEnvInfo/>
+
+                {/*挂载迭代信息(请求量, 质量)*/}
+                <div id={"iterEnvBaseInfoMountDiv"}/>
+                {/*挂载环境下触发的pipeline信息*/}
+                <div id="iterEnvPipelineInfoMountDiv"/>
             </div>
         )
     }
