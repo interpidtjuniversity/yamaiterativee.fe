@@ -58,6 +58,15 @@ class IterationPage extends Component {
             let actions = <IterAction actionData={newVal}/>
             ReactDOM.render(actions, iterEnvActionInfoMountDiv)
         }))
+
+        let iterEnvBaseInfoWatcher = watch(store.getState, 'iterEnvBaseInfoReducer.iterEnvBaseInfo')
+        store.subscribe(iterEnvBaseInfoWatcher((newVal, oldVal, objectPath) => {
+            console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
+            let iterEnvBaseInfoMountDiv = document.getElementById("iterEnvBaseInfoMountDiv")
+            ReactDOM.unmountComponentAtNode(iterEnvBaseInfoMountDiv)
+            let info = <IterEnvInfo iterEnvInfo={newVal}/>
+            ReactDOM.render(info, iterEnvBaseInfoMountDiv)
+        }))
     }
 
     render() {
@@ -69,10 +78,9 @@ class IterationPage extends Component {
                 {/*挂载操作按钮*/}
                 <div id={"iterEnvActionInfoMountDiv"}/>
 
-                <IterEnvInfo/>
-
                 {/*挂载迭代信息(请求量, 质量)*/}
                 <div id={"iterEnvBaseInfoMountDiv"}/>
+
                 {/*挂载环境下触发的pipeline信息*/}
                 <div id="iterEnvPipelineInfoMountDiv"/>
             </div>

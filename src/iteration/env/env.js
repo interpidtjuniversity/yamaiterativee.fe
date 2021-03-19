@@ -5,6 +5,7 @@ import axios from "axios";
 import store from "../../store/config";
 import {SetIterEnvPipelineInfo} from "../../store/constants/iter_env_pipelineinfo_const";
 import {SetIterEnvActionInfo} from "../../store/constants/iter_env_action_const";
+import {SetIterEnvBaseInfo} from "../../store/constants/iter_env_baseinfo_const";
 
 const envMap = new Map([[0, 'dev'], [1, 'itg'], [2, 'pre'], [3, 'grayscale'], [4, 'release']]);
 
@@ -51,6 +52,14 @@ class IterationEnv extends Component{
                     .catch(function (error){})
 
                 // get env base
+                axios.get(_this.pipelineRequestUrl+_envMap.get(cur)+"/info")
+                    .then(function (envBaseInfo) {
+                        store.dispatch({
+                            type: SetIterEnvBaseInfo,
+                            iterEnvBaseInfo: envBaseInfo.data
+                        })
+                    })
+                    .catch(function (error){})
 
 
                 // get env pipeline
@@ -82,6 +91,16 @@ class IterationEnv extends Component{
                     store.dispatch({
                         type: SetIterEnvActionInfo,
                         iterEnvActionInfo: envActionInfo.data,
+                    })
+                })
+                .catch(function (error){})
+
+            // get env base
+            axios.get(_this.pipelineRequestUrl+_envMap.get(index)+"/info")
+                .then(function (envBaseInfo) {
+                    store.dispatch({
+                        type: SetIterEnvBaseInfo,
+                        iterEnvBaseInfo: envBaseInfo.data
                     })
                 })
                 .catch(function (error){})
