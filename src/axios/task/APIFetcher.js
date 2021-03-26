@@ -11,7 +11,6 @@ class APIFetcher {
         const _this = this
         axios.get(_this.url)
             .then(function (response) {
-                console.log(_this.parser(response))
                 _this.callback(_this.parser(response))
             })
             .catch(function (error) {

@@ -2,6 +2,8 @@ import { Node } from 'butterfly-dag';
 import React from "react";
 import $ from'jquery';
 import '../../static/css/iteration/pipeline/stage.css'
+import APIFetcher from "../../axios/task/APIFetcher";
+import TaskExecutor from "../../axios/task/TaskExecutor";
 
 class Stage extends Node {
   constructor(opts) {
@@ -21,6 +23,11 @@ class Stage extends Node {
     this._createTypeIcon(container);
     this._createText(container);
     this._createSteps(container);
+
+    // save stage container ref so we can change bk_color when stage is hang or stage is successfully executed
+    this.container = container;
+    let fetcher = new APIFetcher("/api/v1/iteration/ping", this.parser, this.callback)
+    this.e = new TaskExecutor(fetcher, 5000)
 
     return container[0];
   }
@@ -43,6 +50,13 @@ class Stage extends Node {
     $(dom).append(steps);
   }
 
+  parser = (response) => {
+    return response.data
+  }
+
+  callback = (result) => {
+    this.container.css('background', result.color)
+  }
 }
 
 export default Stage

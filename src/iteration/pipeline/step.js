@@ -27,6 +27,7 @@ class Step extends Component {
     }
 
     componentDidMount() {
+        // if pipeline is running
         let fetcher = new APIFetcher("/api/v1/iteration/ping", this.parser, this.callback)
         this.e = new TaskExecutor(fetcher, 5000)
     }
@@ -44,6 +45,10 @@ class Step extends Component {
             type: result.type,
             color: result.color
         })
+        // if pipeline is done
+        // if (result.pipelineStatus == "done") {
+        //     this.e.kill()
+        // }
     }
 
     render() {
