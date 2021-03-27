@@ -12,12 +12,13 @@ class Step extends Component {
     }
 
     constructor(props) {
-        super(props);
-        this.key = this.props.key
+        super(props)
+        this.index = this.props.index
         this.title = this.props.title
         this.stepImgSrc = this.props.stepImgSrc
         this.stageId = this.props.stageId
         this.execId = this.props.execId
+        this.key = this.stageId+"_"+this.execId+"_"+this.title
     }
 
     openStepLog(stageId, execId, title) {
@@ -52,6 +53,7 @@ class Step extends Component {
     }
 
     render() {
+        console.log(this.key)
         return (
             <div style={{height: 60}}>
                 <div style={{width: 200, position: "absolute"}}>

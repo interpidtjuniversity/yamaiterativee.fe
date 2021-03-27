@@ -55,7 +55,6 @@ class Pipeline extends Component {
 
 
     render() {
-        debugger
         return (
             <div className='schedule'>
                 <UserActInfo avatarSrc={this.props.pipelineData.avatarSrc} size="medium" actionInfo={this.props.pipelineData.actionInfo} extInfo={this.props.pipelineData.extInfo}/>

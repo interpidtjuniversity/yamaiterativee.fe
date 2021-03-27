@@ -39,13 +39,17 @@ class Steps extends Component {
     }
 
     render() {
+        // this where render twice because state.data will be update by axios, so we optimize it when no data and wait axios complete
+        if (this.state.data.length === 0) {
+            return (<div/>)
+        }
         return (
             <div style={{ width: 250 }}>
                 <List
                     size="small"
                     dataSource={this.state.data}
                     renderItem={(item, i) => (
-                        <Step key={i} title={item.title} stepImgSrc={item.img} stageId={this.stageId} execId={this.execId}/>
+                        <Step index={item.index} title={item.title} stepImgSrc={item.img} stageId={this.stageId} execId={this.execId}/>
                     )}
                 />
             </div>

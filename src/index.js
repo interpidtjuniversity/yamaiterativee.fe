@@ -19,9 +19,6 @@ import {SetStepLogRef} from "./store/constants/steplog_const"
 
 import watch from 'redux-watch'
 
-import classic_mr_Data from './data/iteration/pipeline/classic_mr';
-import server_apply_Data from "./data/iteration/pipeline/server_apply";
-
 class IterationPage extends Component {
 
     constructor(props) {

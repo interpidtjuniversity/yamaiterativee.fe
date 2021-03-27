@@ -11,7 +11,7 @@ class IterAction extends Component {
 
     render() {
         this.actions = this.actionData.map((item, index) => {
-            return <Button type={"primary"}>{item.buttonShowWords}</Button>
+            return <Button type={"primary"} key={index}>{item.buttonShowWords}</Button>
         })
 
         return (
