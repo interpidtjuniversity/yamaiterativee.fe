@@ -51,7 +51,7 @@ class Steps extends Component {
                     size="small"
                     dataSource={this.state.data}
                     renderItem={(item, i) => (
-                        <Step index={item.index} stepId={item.stepId} title={item.title} stepImgSrc={item.image} stageId={this.stageId} actionId={this.actionId} actionState={this.actionState}/>
+                        <Step index={item.index} stepId={item.stepId} title={item.title} stepImgSrc={item.image} stageId={this.stageId} actionId={this.actionId} iterationId={this.iterationId}/>
                     )}
                 />
             </div>

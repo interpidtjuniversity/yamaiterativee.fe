@@ -3,6 +3,7 @@ import { React, Component } from 'react';
 import store from "../../store/config";
 import TaskExecutor from "../../axios/task/TaskExecutor";
 import APIFetcher from "../../axios/task/APIFetcher";
+import IterationChildrenState from "./const";
 
 class Step extends Component {
 
@@ -19,8 +20,10 @@ class Step extends Component {
         this.stepImgSrc = this.props.stepImgSrc
         this.stageId = this.props.stageId
         this.actionId = this.props.actionId
-        this.actionState=this.props.actionState
+        this.iterationId = this.props.iterationId
         this.key = this.stageId+"_"+this.actionId+"_"+this.title
+        this.const = new IterationChildrenState()
+        this.stageStateRequestUrl = "/api/v1/iteration/"+this.iterationId+"/action/"+this.actionId+"/stage/"+this.stageId+"/step/"+this.stepId+"/state"
     }
 
     openStepLog(stageId, actionId, title) {
@@ -31,8 +34,8 @@ class Step extends Component {
 
     componentDidMount() {
         // if pipeline is running
-        let fetcher = new APIFetcher("/api/v1/iteration/ping", this.parser, this.callback)
-        this.e = new TaskExecutor(fetcher, 5000)
+        let fetcher = new APIFetcher(this.stageStateRequestUrl, this.parser, this.callback)
+        this.e = new TaskExecutor(fetcher, 2000)
     }
 
     componentWillUnmount() {
@@ -44,18 +47,17 @@ class Step extends Component {
     }
 
     callback = (result) => {
+        console.log(result)
         this.setState({
-            type: result.type,
-            color: result.color
+            type: this.const.StepIconMap.get(result),
+            color: this.const.ColorMap.get(result)
         })
-        // if pipeline is done
-        // if (result.pipelineStatus == "done") {
-        //     this.e.kill()
-        // }
+        if (result === this.const.StepStateFailure || result === this.const.StepStateFinish ) {
+            this.e.kill()
+        }
     }
 
     render() {
-        console.log(this.key)
         return (
             <div style={{height: 60}}>
                 <div style={{width: 200, position: "absolute"}}>

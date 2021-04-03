@@ -16,7 +16,6 @@ class Pipeline extends Component {
         super(props);
         this.iterationId = props.iterationId
         this.pipelineData = props.pipelineData
-        this.actionState = props.pipelineData.state
         for (let i = 0; i < this.pipelineData['nodes'].length; i++) {
             this.pipelineData['nodes'][i].Class = Stage;
         }
@@ -47,7 +46,7 @@ class Pipeline extends Component {
                 const actionId = event['node']['options']['actionId'];
                 // this div look { @stage.js line40 }
                 const div = document.getElementById(actionId_stageId);
-                ReactDOM.render(<StepsContainer iterationId={this.iterationId}  actionId_stageId={actionId_stageId} stageId={stageId} actionId={actionId} actionState={this.actionState}/>
+                ReactDOM.render(<StepsContainer iterationId={this.iterationId}  actionId_stageId={actionId_stageId} stageId={stageId} actionId={actionId}/>
                     , div);
             }
         });

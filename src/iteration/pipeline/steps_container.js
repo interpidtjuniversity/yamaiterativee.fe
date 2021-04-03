@@ -13,7 +13,6 @@ class StepsContainer extends Component {
             visible: true
         };
         this.iterationId = this.props.iterationId
-        this.actionState = this.props.actionState
         this.actionId_stageId = this.props.actionId_stageId;
         this.parent = document.getElementById(this.actionId_stageId);
         this.stageId = this.props.stageId
@@ -31,7 +30,7 @@ class StepsContainer extends Component {
                      safeNode={this.parent}
                      onRequestClose={this.onClose}>
                     <span className="steps-overlay">
-                        <Steps iterationId={this.iterationId} actionState={this.actionState} actionId_stageId={this.actionId_stageId} stageId={this.stageId} actionId={this.actionId}/>
+                        <Steps iterationId={this.iterationId} actionId_stageId={this.actionId_stageId} stageId={this.stageId} actionId={this.actionId}/>
                     </span>
             </Overlay>
         );
