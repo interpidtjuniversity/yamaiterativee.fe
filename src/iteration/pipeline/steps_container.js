@@ -12,14 +12,16 @@ class StepsContainer extends Component {
         this.state = {
             visible: true
         };
-        this.stageId_execId = this.props.stageId_execId;
-        this.parent = document.getElementById(this.stageId_execId);
+        this.iterationId = this.props.iterationId
+        this.actionState = this.props.actionState
+        this.actionId_stageId = this.props.actionId_stageId;
+        this.parent = document.getElementById(this.actionId_stageId);
         this.stageId = this.props.stageId
-        this.execId = this.props.execId
+        this.actionId = this.props.actionId
     }
 
     onClose = () => {
-        ReactDOM.unmountComponentAtNode(document.getElementById(this.stageId_execId));
+        ReactDOM.unmountComponentAtNode(document.getElementById(this.actionId_stageId));
     }
 
     render() {
@@ -29,7 +31,7 @@ class StepsContainer extends Component {
                      safeNode={this.parent}
                      onRequestClose={this.onClose}>
                     <span className="steps-overlay">
-                        <Steps stageId_execId={this.stageId_execId} stageId={this.stageId} execId={this.execId}/>
+                        <Steps iterationId={this.iterationId} actionState={this.actionState} actionId_stageId={this.actionId_stageId} stageId={this.stageId} actionId={this.actionId}/>
                     </span>
             </Overlay>
         );

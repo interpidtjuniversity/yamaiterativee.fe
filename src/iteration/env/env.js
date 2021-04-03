@@ -15,8 +15,8 @@ class IterationEnv extends Component{
         super(props);
         this.iterationId = this.props.iterationId
         this.baseRequestUrl = "/api/v1/iteration/"+this.iterationId+"/info"
-        this.pipelineRequestUrl = "/api/v1/iteration/"+this.iterationId+"/"
-        this.actionRequestUrl = "api/v1/iteration/action/"
+        this.pipelineRequestUrl = "/api/v1/iteration/"+this.iterationId+"/envType/"
+        this.actionRequestUrl = "api/v1/iteration/"+this.iterationId+"/action/envType/"
     }
 
     state = {

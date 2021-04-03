@@ -10,10 +10,12 @@ class Steps extends Component {
 
     constructor(props) {
         super(props);
-        this.stageId_execId = this.props.stageId_execId;
+        this.iterationId = this.props.iterationId
+        this.actionState = this.props.actionState
+        this.actionId_stageId = this.props.actionId_stageId;
         this.stageId = this.props.stageId
-        this.execId = this.props.execId
-        this.baseRequestUrl = "/api/v1/iteration/pipeline/"+this.stageId
+        this.actionId = this.props.actionId
+        this.baseRequestUrl = "/api/v1/iteration/"+this.iterationId+"/action/"+this.actionId+"/stage/"+this.stageId
         this.state = {
             data : []
         }
@@ -32,8 +34,8 @@ class Steps extends Component {
             })
     }
 
-    openStepLog(stageId, execId, title) {
-        const data = "stageId is:" + stageId + " execId is:" + execId + " title is:" + title
+    openStepLog(stageId, actionId, title) {
+        const data = "stageId is:" + stageId + " actionId is:" + actionId + " title is:" + title
         let stepLog = store.getState().stepLogReducer.stepLogRef
         stepLog.onOpen(data,data)
     }
@@ -49,7 +51,7 @@ class Steps extends Component {
                     size="small"
                     dataSource={this.state.data}
                     renderItem={(item, i) => (
-                        <Step index={item.index} title={item.title} stepImgSrc={item.img} stageId={this.stageId} execId={this.execId}/>
+                        <Step index={item.index} stepId={item.stepId} title={item.title} stepImgSrc={item.image} stageId={this.stageId} actionId={this.actionId} actionState={this.actionState}/>
                     )}
                 />
             </div>

@@ -14,7 +14,9 @@ class Pipeline extends Component {
 
     constructor(props) {
         super(props);
+        this.iterationId = props.iterationId
         this.pipelineData = props.pipelineData
+        this.actionState = props.pipelineData.state
         for (let i = 0; i < this.pipelineData['nodes'].length; i++) {
             this.pipelineData['nodes'][i].Class = Stage;
         }
@@ -40,13 +42,12 @@ class Pipeline extends Component {
         this.canvas.draw(this.pipelineData);
         this.canvas.on('events', (event) => {
             if (event['type'] === "node:click") {
-                debugger
-                const stageId_execId = event['node']['options']['stageId_execId'];
+                const actionId_stageId = event['node']['options']['actionId_stageId'];
                 const stageId = event['node']['options']['stageId'];
-                const execId = event['node']['options']['execId'];
+                const actionId = event['node']['options']['actionId'];
                 // this div look { @stage.js line40 }
-                const div = document.getElementById(stageId_execId);
-                ReactDOM.render(<StepsContainer stageId_execId={stageId_execId} stageId={stageId} execId={execId}/>
+                const div = document.getElementById(actionId_stageId);
+                ReactDOM.render(<StepsContainer iterationId={this.iterationId}  actionId_stageId={actionId_stageId} stageId={stageId} actionId={actionId} actionState={this.actionState}/>
                     , div);
             }
         });

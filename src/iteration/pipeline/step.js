@@ -15,14 +15,16 @@ class Step extends Component {
         super(props)
         this.index = this.props.index
         this.title = this.props.title
+        this.stepId = this.props.stepId
         this.stepImgSrc = this.props.stepImgSrc
         this.stageId = this.props.stageId
-        this.execId = this.props.execId
-        this.key = this.stageId+"_"+this.execId+"_"+this.title
+        this.actionId = this.props.actionId
+        this.actionState=this.props.actionState
+        this.key = this.stageId+"_"+this.actionId+"_"+this.title
     }
 
-    openStepLog(stageId, execId, title) {
-        const data = "stageId is:" + stageId + " execId is:" + execId + " title is:" + title
+    openStepLog(stageId, actionId, title) {
+        const data = "stageId is:" + stageId + " actionId is:" + actionId + " title is:" + title
         let stepLog = store.getState().stepLogReducer.stepLogRef
         stepLog.onOpen(data,data)
     }
@@ -59,7 +61,7 @@ class Step extends Component {
                 <div style={{width: 200, position: "absolute"}}>
                     <List.Item key={this.key} title={this.title} media={<Avatar src={this.stepImgSrc}/>}
                                onClick={() => {
-                                   this.openStepLog(this.stageId, this.execId, this.title)
+                                   this.openStepLog(this.stageId, this.actionId, this.title)
                                }}
                     />
                 </div>

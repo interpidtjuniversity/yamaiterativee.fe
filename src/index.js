@@ -42,7 +42,7 @@ class IterationPage extends Component {
             let iterEnvPipelineInfoMountDiv = document.getElementById("iterEnvPipelineInfoMountDiv")
             ReactDOM.unmountComponentAtNode(iterEnvPipelineInfoMountDiv)
             let pipelines = newVal.map((item, index) => {
-                return (<Pipeline pipelineData={item} stepLogRef={this.stepLogRef} pipelineDataCanvasId={index}/>)
+                return (<Pipeline iterationId={this.iterationId} pipelineData={item} stepLogRef={this.stepLogRef} pipelineDataCanvasId={index}/>)
             })
             ReactDOM.render(pipelines, iterEnvPipelineInfoMountDiv)
         }))
@@ -61,7 +61,7 @@ class IterationPage extends Component {
             console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
             let iterEnvBaseInfoMountDiv = document.getElementById("iterEnvBaseInfoMountDiv")
             ReactDOM.unmountComponentAtNode(iterEnvBaseInfoMountDiv)
-            let info = <IterEnvInfo iterEnvInfo={newVal}/>
+            let info = <IterEnvInfo iterEnvInfo={newVal} iterationId={this.iterationId}/>
             ReactDOM.render(info, iterEnvBaseInfoMountDiv)
         }))
     }
