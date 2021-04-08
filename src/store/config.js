@@ -1,4 +1,4 @@
-// src/store/index.js
+// src/store/IterationPage.js
 import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'

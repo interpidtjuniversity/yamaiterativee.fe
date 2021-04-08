@@ -33,7 +33,7 @@ class IterEnvInfo extends Component{
                             {/*<a href={"www.baidu.com"}>ce594s</a>*/}
                             {/*<div className="detail">提交模式MR</div>*/}
                             {/*<div className="detail">服务变更：小</div>*/}
-                            <a href={"www.baidu.com"}>{this.iterEnvInfo.latestCommit}</a>
+                            <a href={this.iterEnvInfo.latestCommitLink} rel={"noopener noreferrer external"}>{this.iterEnvInfo.latestCommit}</a>
                             <div className="detail">提交模式: {this.iterEnvInfo.latestMode}</div>
                             <div className="detail">服务变更：{this.iterEnvInfo.serviceChange}</div>
                         </div>
