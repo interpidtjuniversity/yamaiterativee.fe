@@ -1,0 +1,41 @@
+
+.list {
+    position: relative;
+    height: 100%
+}
+.list-item {
+    position: relative;
+    /*border: 1px solid #eee;*/
+    /*margin-bottom: 20px;*/
+    height: calc(95vh);
+    width: 100%
+}
+.box-w1p {
+    width: 25%;
+    height: 100%;
+}
+
+.box-w3p {
+    width: 75%;
+    height: 100%;
+}
+
+.box-w4p {
+    width: 100%;
+    height: 100%;
+}
+
+.box-h1p {
+    width: 100%;
+    height: 10%;
+}
+
+.box-h3p {
+    width: 100%;
+    height: 30%;
+}
+
+.iteration-create-button{
+    border: 1px solid #eee;
+    margin-bottom: 20px;
+}
