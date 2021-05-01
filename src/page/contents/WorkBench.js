@@ -1,10 +1,12 @@
 import react from 'react'
 
 import User from "../../data/user";
-import {Box, Tab, Dropdown, Menu, Drawer, Form, Input, Select} from '@alifd/next'
+import {Box, Tab, Dropdown, Menu, Drawer, Form, Input, Select, Message} from '@alifd/next'
 import '../../static/css/home/WorkBench.css';
 import {Button} from "antd";
 import axios from "axios";
+import qs from 'qs'
+import * as React from "react";
 
 class WorkBench extends react.Component{
 
@@ -111,18 +113,60 @@ class StanderIteration extends react.Component {
         this.FormItem = Form.Item;
 
         this.state = {
-            owners:[]
+            owners:[],
+            repos:[],
+            owner:"",
+            repo:"",
         }
+        this.userRepoSelectRef = React.createRef()
 
     }
 
     userNameSelectClick =() => {
+        if (this.state.owners.length > 0) {
+            return
+        }
         const _this = this
         axios.get("/api/v1/home/workbench/newiteration/allusers").then(function (owners) {
             _this.setState({
                 owners: owners.data
             })
         }).catch(function (error){})
+    }
+    userNameSelectChange =(value, actionType, item) => {
+        this.setState({
+            owner:value
+        })
+        const _this=this
+        axios.get("/api/v1/home/workbench/newiteration/ownerrepos/"+value).then(function (repos){
+            _this.setState({
+                repos: repos.data
+            })
+        }).catch(function (error){})
+    }
+
+    userRepoSelectChange =(value, actionType, item) => {
+        this.setState({
+            repo:value
+        })
+    }
+    userRepoSelectClick =() => {
+        if ("" === this.state.owner) {
+            Message.error("Please select the Application owner")
+        }
+    }
+
+    submitCreateIterationForm =() => {
+        let form = {
+            ownerName : this.state.owner,
+            repoName : this.state.repo,
+            creator : User.userName,
+            admins : ["a","b","c"]
+        }
+        axios.post("/api/v1/home/workbench/newiteration/new", qs.stringify(form), { headers:{ 'Content-Type':'application/x-www-form-urlencoded' }})
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error){})
     }
 
 
@@ -134,11 +178,7 @@ class StanderIteration extends react.Component {
                     required
                     requiredMessage="Please select the Application owner"
                 >
-                    <Select placeholder="Please select the Application owner" stype={{width:"100%"}} onClick={this.userNameSelectClick}>
-                        {
-                        this.state.owners.map(item => (
-                            <option value={item}>{item}</option>
-                        ))}
+                    <Select placeholder="Please select the Application owner" dataSource={this.state.owners} stype={{width:"100%"}} onChange={this.userNameSelectChange} onClick={this.userNameSelectClick} hasArrow={false} showSearch={true}>
                     </Select>
                 </this.FormItem>
                 <this.FormItem
@@ -146,7 +186,8 @@ class StanderIteration extends react.Component {
                     required
                     requiredMessage="Please specify the Application name"
                 >
-                    <Input name="repoName"/>
+                    <Select ref={this.userRepoSelectRef} placeholder="Please select the Repository" stype={{width:"100%"}} onClick={this.userRepoSelectClick} onChange={this.userRepoSelectChange} dataSource={this.state.repos} hasArrow={false} showSearch={true}>
+                    </Select>
                 </this.FormItem>
             </Form>
         )

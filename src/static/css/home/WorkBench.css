@@ -35,6 +35,31 @@
     height: 30%;
 }
 
+.box-h90p {
+    width: 90%;
+    height: 100%;
+    margin-left: 5%;
+    margin-top: 1%;
+}
+
+.box-h10p {
+    width: 90%;
+    height: 5%;
+    margin-left: 5%;
+    margin-top: 1%;
+}
+
+.box-h2p {
+    width: 100%;
+    height: 50%;
+    margin-top: 2%;
+}
+
+.box-w33 {
+    width: 33%;
+    height: 100%;
+}
+
 .iteration-create-button{
     border: 1px solid #eee;
     margin-bottom: 20px;

@@ -4,5 +4,6 @@ import HomePage from "./page/HomePage"
 
 ReactDOM.render(
     <HomePage/>,
+    // <IterationPage/>,
     document.getElementById('root')
 );
