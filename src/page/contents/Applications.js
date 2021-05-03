@@ -1,5 +1,5 @@
 import react from 'react'
-import {Pagination, Box, Card, Button, Drawer, Form, Select, Input, Icon, ResponsiveGrid, Upload} from '@alifd/next';
+import {Pagination, Box, Card, Button, Drawer, Form, Select, Input, Icon, ResponsiveGrid, Upload, Table} from '@alifd/next';
 import * as React from "react";
 import ReactDOM from "react-dom"
 
@@ -137,6 +137,30 @@ class CreateApplicationForm extends react.Component {
         authType: 1,
         allUsers: [],
         authUsers: [],
+        defaultYamaX: [
+            {key:"spring.sleuth.enabled", value:"true"},
+            {key:"grpc.client.cloud-grpc-server-consul.enableKeepAlive", value:"true"},
+            {key:"grpc.client.cloud-grpc-server-consul.keepAliveWithoutCalls", value:"true"},
+            {key:"grpc.client.cloud-grpc-server-consul.negotiationType", value:"plaintext"},
+            {key:"management.endpoints.web.exposure.include", value:"*"},
+            {key:"management.server.port", value:"8088"},
+            {key:"management.endpoint.health.show-details", value:"always"},
+            {key:"management.endpoint.serviceregistry.enabled", value:"true"},
+            {key:"server.port", value:"8080"},
+            {key:"spring.zipkin.enabled", value:"true"},
+            {key:"spring.sleuth.sampler.probability", value:"1"},
+            {key:"spring.sleuth.grpc.enabled", value:"true"},
+            {key:"spring.application.name", value:"miniselfop"},
+            {key:"spring.cloud.consul.discovery.register", value:"true"},
+            {key:"spring.cloud.consul.discovery.port", value:"10000"},
+            {key:"spring.cloud.consul.port", value:"4000"},
+            {key:"grpc.server.port", value:"10000"},
+            {key:"spring.cloud.consul.host", value:"100.68.104.56"},
+            {key:"spring.zipkin.base-url", value:"http://192.168.1.4:9411"},
+            {key:"spring.cloud.consul.discovery.hostname", value:"100.68.104.56"},
+            {key:"spring.cloud.consul.discovery.tags", value:"dev"},
+            {key:"spring.cloud.consul.discovery.instance-id", value:"miniselfop-dev-daecwrn7"},
+        ]
     }
 
 
@@ -191,6 +215,83 @@ class CreateApplicationForm extends react.Component {
                 }).catch(function (error){})
             }
         }
+
+        this.YaMaXKeyColumnEdit = (value, index, record) => {
+            return <EditablePane defaultTitle={value} index={index} name="key" valueEdit={this.YaMaXEdit}/>
+        }
+        this.YaMaXValueColumnEdit = (value, index, record) => {
+            return <EditablePane defaultTitle={value} index={index} name="value" valueEdit={this.YaMaXEdit}/>
+        }
+        this.YaMaXEdit = (index, key, value) => {
+            let newYamaX = this.state.defaultYamaX
+            if (key === "key") {
+                newYamaX[index].key = value
+            } else if (key === "value") {
+                newYamaX[index].value = value
+            }
+            this.setState({
+                defaultYamaX: newYamaX
+            })
+        }
+        this.YaMaXDeleteRow = (index) => {
+            let newYamaX = this.state.defaultYamaX
+            newYamaX.splice(index, 1)
+            this.setState({
+                defaultYamaX: newYamaX
+            })
+        }
+        this.YaMaXAddRow = () => {
+            let newYamaX = this.state.defaultYamaX
+            newYamaX.push({key: "key",value: "value"})
+            this.setState({
+                defaultYamaX: newYamaX
+            })
+        }
+        this.YaMaXSave = () => {
+            console.log(this.state.defaultYamaX)
+            // save this.state.defaultYamaX
+        }
+
+        this.YaMaXColumnOperation = (value, index, record) => {
+            return (
+                <div>
+                    <Button type="primary" onClick={this.YaMaXDeleteRow.bind(this, index)}>
+                        删除
+                    </Button>
+                </div>
+            )
+        }
+        /**
+         * config
+         *  as client
+         spring.sleuth.enabled=true
+         grpc.client.cloud-grpc-server-consul.enableKeepAlive=true
+         grpc.client.cloud-grpc-server-consul.keepAliveWithoutCalls=true
+         grpc.client.cloud-grpc-server-consul.negotiationType=plaintext
+         as server
+         management.endpoints.web.exposure.include=*
+         management.server.port=8088
+         management.endpoint.health.show-details=always
+         management.endpoint.serviceregistry.enabled=true
+         server.port=8080
+         spring.zipkin.enabled=true
+         spring.sleuth.sampler.probability=1
+         spring.sleuth.grpc.enabled=true
+         spring.application.name=miniselfop
+         spring.cloud.consul.discovery.register=true
+         spring.cloud.consul.discovery.port=10000
+         spring.cloud.consul.port=4000
+         grpc.server.port=10000
+
+         # global consul
+         spring.cloud.consul.host=100.68.104.56
+         # global zipkin
+         spring.zipkin.base-url=http://192.168.1.4:9411
+         # server ip
+         spring.cloud.consul.discovery.hostname=100.68.104.56
+         spring.cloud.consul.discovery.tags=dev
+         spring.cloud.consul.discovery.instance-id=miniselfop-dev-daecwrn7
+         * */
     }
 
     render() {
@@ -244,7 +345,7 @@ class CreateApplicationForm extends react.Component {
                                 )}
                             </ResponsiveGrid>
                     </Form.Item>
-                    <Form.Item label="应用配置">
+                    <Form.Item label="应用资源配置">
                         <ResponsiveGrid gap={[0, 15]} columns={2} className="HierarchicalBlock">
                             <Form.Item label="应用域名" required requiredMessage="应用域名">
                                 <Input name="appDomainName" placeholder="应用域名" rows={10}/>
@@ -276,26 +377,56 @@ class CreateApplicationForm extends react.Component {
 
                         </ResponsiveGrid>
                     </Form.Item>
-                    <ResponsiveGrid gap={[0, 15]} columns={2} className="HierarchicalBlock">
-                        <Form.Item label="应用图标" required requiredMessage="请上传应用图标">
-                            <Upload action={this.uploadAPI}
-                                    autoUpload={false}
-                                    beforeUpload={this.beforeUploaderDoUpload}
-                                    listType="image"
-                                    ref={this.saveUploaderRef}
-                                    name="image"
-                            >
-                                <Button>
-                                    <Icon type="upload"/>
-                                    select a app icon
+                    <Form.Item label="应用样式配置">
+                        <ResponsiveGrid gap={[0, 15]} columns={2} className="HierarchicalBlock">
+                            <Form.Item label="应用图标" required requiredMessage="请上传应用图标">
+                                <Upload action={this.uploadAPI}
+                                        autoUpload={false}
+                                        beforeUpload={this.beforeUploaderDoUpload}
+                                        listType="image"
+                                        ref={this.saveUploaderRef}
+                                        name="image"
+                                >
+                                    <Button>
+                                        <Icon type="upload"/>
+                                        select a app icon
+                                    </Button>
+                                </Upload>
+                                <br/>
+                                <Button type="primary" onClick={this.uploaderDoUpload}>
+                                    Upload
                                 </Button>
-                            </Upload>
-                            <br/>
-                            <Button type="primary" onClick={this.uploaderDoUpload}>
-                                Upload
-                            </Button>
-                        </Form.Item>
-                    </ResponsiveGrid>
+                            </Form.Item>
+                        </ResponsiveGrid>
+                    </Form.Item>
+                    <Form.Item label="YamaX">
+                        <ResponsiveGrid gap={[0, 15]} columns={1} className="HierarchicalBlock">
+                            <Box direction="row">
+                                <Button onClick={this.YaMaXAddRow} type="primary" style={{width:"40%"}}>
+                                    新增
+                                </Button>
+                                <Button onClick={this.YaMaXSave} type="primary" style={{marginLeft:"20%", width:"40%"}}>
+                                    保存
+                                </Button>
+                            </Box>
+                            <Table dataSource={this.state.defaultYamaX} useVirtual={true}>
+                                <Table.Column
+                                    title="key"
+                                    cell={this.YaMaXKeyColumnEdit}
+                                    dataIndex="key"
+                                />
+                                <Table.Column
+                                    title="value"
+                                    cell={this.YaMaXValueColumnEdit}
+                                    dataIndex="value"
+                                />
+                                <Table.Column
+                                    title="operation"
+                                    cell={this.YaMaXColumnOperation}
+                                />
+                            </Table>
+                        </ResponsiveGrid>
+                    </Form.Item>
                     <Form.Item label="应用描述" required requiredMessage="请输入应用详细信息">
                         <Input.TextArea name="appDescription" placeholder="请输入应用详细信息" rows={10}/>
                     </Form.Item>
@@ -381,6 +512,64 @@ class Application extends react.Component {
         )
     }
 
+}
+
+/**
+ * get editablePane value through parent component
+ *
+ * */
+class EditablePane extends React.Component{
+    constructor(props) {
+        super(props);
+        this.index = this.props.index
+        this.name = this.props.name
+        this.onKeyDown = e => {
+            const { keyCode } = e;
+            if (keyCode > 36 && keyCode < 41) {
+                e.stopPropagation();
+            }
+        };
+        this.onBlur = e => {
+            this.setState({
+                editable: false,
+                cellTitle: e.target.value
+            });
+            this.props.valueEdit(this.index, this.name, e.target.value)
+        };
+        this.onDblClick = () => {
+            this.setState({
+                editable: true
+            });
+        };
+        this.state = {
+            cellTitle: props.defaultTitle,
+            editable: false
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.defaultTitle !== this.state.cellTitle) {
+            this.setState({
+                cellTitle: nextProps.defaultTitle
+            });
+        }
+    }
+
+    // Stop bubble up the events of keyUp, keyDown, keyLeft, and keyRight
+    render() {
+        const { cellTitle, editable } = this.state;
+        if (editable) {
+            return (
+                <Input
+                    autoFocus
+                    defaultValue={cellTitle}
+                    onKeyDown={this.onKeyDown}
+                    onBlur={this.onBlur}
+                />
+            );
+        }
+        return <span onDoubleClick={this.onDblClick}>{cellTitle}</span>;
+    }
 }
 
 export default Applications
