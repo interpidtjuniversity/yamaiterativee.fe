@@ -137,36 +137,15 @@ class CreateApplicationForm extends react.Component {
         authType: 1,
         allUsers: [],
         authUsers: [],
-        defaultYamaX: [
-            {key:"spring.sleuth.enabled", value:"true"},
-            {key:"grpc.client.cloud-grpc-server-consul.enableKeepAlive", value:"true"},
-            {key:"grpc.client.cloud-grpc-server-consul.keepAliveWithoutCalls", value:"true"},
-            {key:"grpc.client.cloud-grpc-server-consul.negotiationType", value:"plaintext"},
-            {key:"management.endpoints.web.exposure.include", value:"*"},
-            {key:"management.server.port", value:"8088"},
-            {key:"management.endpoint.health.show-details", value:"always"},
-            {key:"management.endpoint.serviceregistry.enabled", value:"true"},
-            {key:"server.port", value:"8080"},
-            {key:"spring.zipkin.enabled", value:"true"},
-            {key:"spring.sleuth.sampler.probability", value:"1"},
-            {key:"spring.sleuth.grpc.enabled", value:"true"},
-            {key:"spring.application.name", value:"miniselfop"},
-            {key:"spring.cloud.consul.discovery.register", value:"true"},
-            {key:"spring.cloud.consul.discovery.port", value:"10000"},
-            {key:"spring.cloud.consul.port", value:"4000"},
-            {key:"grpc.server.port", value:"10000"},
-            {key:"spring.cloud.consul.host", value:"100.68.104.56"},
-            {key:"spring.zipkin.base-url", value:"http://192.168.1.4:9411"},
-            {key:"spring.cloud.consul.discovery.hostname", value:"100.68.104.56"},
-            {key:"spring.cloud.consul.discovery.tags", value:"dev"},
-            {key:"spring.cloud.consul.discovery.instance-id", value:"miniselfop-dev-daecwrn7"},
-        ]
+        appImage: "Java Spring",
+        defaultYamaX: [],
     }
 
 
     constructor(props) {
         super(props);
         this.uploadAPI = "/api/v1/home/application/newapplication/seticon"
+        this.getNewAppDefaultConfigAPI = "/api/v1/home/application/newapplication/optionconfig/"
         this.saveUploaderRef = (ref) => {
             if (!ref) return;
             this.uploaderRef = ref.getInstance()
@@ -185,8 +164,10 @@ class CreateApplicationForm extends react.Component {
              * appAuthScope
              *  1:公司内部 2:团队内部 3:个人
              * */
-            console.log(value)
             value.authMembers = value.authMembers.join()
+            value.configs = JSON.stringify(this.state.defaultYamaX)
+            console.log(value)
+            value.image = value.image[0].imgURL
             axios.post("/api/v1/home/application/newapplication/new", qs.stringify(value))
                 .then(function (response) {
                     console.log(response)
@@ -215,12 +196,19 @@ class CreateApplicationForm extends react.Component {
                 }).catch(function (error){})
             }
         }
+        this.appImageChange = (value) => {
+            this.setState({
+                appImage: value
+            })
+            this.queryAppDefaultConfigs(value)
+        }
+
 
         this.YaMaXKeyColumnEdit = (value, index, record) => {
-            return <EditablePane defaultTitle={value} index={index} name="key" valueEdit={this.YaMaXEdit}/>
+            return <EditablePane defaultTitle={value} index={index} changeable={record.changeable}  name="key" valueEdit={this.YaMaXEdit}/>
         }
         this.YaMaXValueColumnEdit = (value, index, record) => {
-            return <EditablePane defaultTitle={value} index={index} name="value" valueEdit={this.YaMaXEdit}/>
+            return <EditablePane defaultTitle={value.toString()} index={index} changeable={record.changeable} name="value" valueEdit={this.YaMaXEdit}/>
         }
         this.YaMaXEdit = (index, key, value) => {
             let newYamaX = this.state.defaultYamaX
@@ -242,7 +230,7 @@ class CreateApplicationForm extends react.Component {
         }
         this.YaMaXAddRow = () => {
             let newYamaX = this.state.defaultYamaX
-            newYamaX.push({key: "key",value: "value"})
+            newYamaX.push({key: "key",value: "value", changeable: true, displayable: true})
             this.setState({
                 defaultYamaX: newYamaX
             })
@@ -253,13 +241,40 @@ class CreateApplicationForm extends react.Component {
         }
 
         this.YaMaXColumnOperation = (value, index, record) => {
-            return (
-                <div>
-                    <Button type="primary" onClick={this.YaMaXDeleteRow.bind(this, index)}>
-                        删除
-                    </Button>
-                </div>
-            )
+            if (record.changeable) {
+                return (
+                    <div>
+                        <Button type="primary" onClick={this.YaMaXDeleteRow.bind(this, index)}>
+                            删除
+                        </Button>
+                    </div>
+                )
+            } else {
+                return (
+                    <div>
+                        <Button type="primary" disabled={true} onClick={this.YaMaXDeleteRow.bind(this, index)}>
+                            删除
+                        </Button>
+                    </div>
+                )
+            }
+        }
+
+        this.queryAppDefaultConfigs = (imageType) => {
+            // clear whitespace and toLowerCase
+            imageType = imageType.replace(/\s+/g, "").toLowerCase();
+            const _this = this
+            axios.get(_this.getNewAppDefaultConfigAPI+imageType)
+                .then(function (configs){
+                    _this.setState({
+                        defaultYamaX: configs.data
+                    })
+                })
+                .catch(function (error){
+                    _this.setState({
+                        defaultYamaX: []
+                    })
+                })
         }
         /**
          * config
@@ -292,6 +307,10 @@ class CreateApplicationForm extends react.Component {
          spring.cloud.consul.discovery.tags=dev
          spring.cloud.consul.discovery.instance-id=miniselfop-dev-daecwrn7
          * */
+    }
+
+    componentDidMount() {
+        this.queryAppDefaultConfigs(this.state.appImage)
     }
 
     render() {
@@ -347,26 +366,23 @@ class CreateApplicationForm extends react.Component {
                     </Form.Item>
                     <Form.Item label="应用资源配置">
                         <ResponsiveGrid gap={[0, 15]} columns={2} className="HierarchicalBlock">
-                            <Form.Item label="应用域名" required requiredMessage="应用域名">
-                                <Input name="appDomainName" placeholder="应用域名" rows={10}/>
-                            </Form.Item>
                             <Form.Item label="数据库配置" required requiredMessage="请选择数据库">
                                 <Select name="appDataBase" placeholder="请选择数据库" defaultValue="Mysql">
-                                    <Select.Option value={1} key={1}>Mysql</Select.Option>
-                                    <Select.Option value={2} key={2}>OceanBase</Select.Option>
+                                    <Select.Option value={"Mysql"} key={1}>Mysql</Select.Option>
+                                    <Select.Option value={"OceanBase"} key={2}>OceanBase</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item label="注册中心配置" required requiredMessage="请选择注册中心">
                                 <Select name="appRegistry" placeholder="请选择注册中心" defaultValue="Consul">
-                                    <Select.Option value={1} key={1}>Consul</Select.Option>
-                                    <Select.Option value={2} key={2}>Zookeeper</Select.Option>
+                                    <Select.Option value={"Consul"} key={1}>Consul</Select.Option>
+                                    <Select.Option value={"Zookeeper"} key={2}>Zookeeper</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item label="应用镜像配置" required requiredMessage="请选择应用镜像">
-                                <Select name="appImage" placeholder="请选择应用镜像" defaultValue="Java">
-                                    <Select.Option value={1} key={1}>Java</Select.Option>
-                                    <Select.Option value={2} key={2}>Golang</Select.Option>
-                                    <Select.Option value={3} key={3}>Python</Select.Option>
+                                <Select name="appImage" placeholder="请选择应用镜像" defaultValue="Java Spring" onChange={this.appImageChange}>
+                                    <Select.Option value={"Java Spring"} key={1}>Java Spring</Select.Option>
+                                    <Select.Option value={"Golang"} key={2}>Golang</Select.Option>
+                                    <Select.Option value={"Python"} key={3}>Python</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item label="链路追踪" required requiredMessage="请选择链路追踪镜像">
@@ -385,6 +401,7 @@ class CreateApplicationForm extends react.Component {
                                         beforeUpload={this.beforeUploaderDoUpload}
                                         listType="image"
                                         ref={this.saveUploaderRef}
+                                        useDataURL={true}
                                         name="image"
                                 >
                                     <Button>
@@ -409,7 +426,7 @@ class CreateApplicationForm extends react.Component {
                                     保存
                                 </Button>
                             </Box>
-                            <Table dataSource={this.state.defaultYamaX} useVirtual={true}>
+                            <Table dataSource={this.state.defaultYamaX} fixedHeader={true} maxBodyHeight={200}>
                                 <Table.Column
                                     title="key"
                                     cell={this.YaMaXKeyColumnEdit}
@@ -523,6 +540,7 @@ class EditablePane extends React.Component{
         super(props);
         this.index = this.props.index
         this.name = this.props.name
+        this.changeable = this.props.changeable
         this.onKeyDown = e => {
             const { keyCode } = e;
             if (keyCode > 36 && keyCode < 41) {
@@ -558,17 +576,26 @@ class EditablePane extends React.Component{
     // Stop bubble up the events of keyUp, keyDown, keyLeft, and keyRight
     render() {
         const { cellTitle, editable } = this.state;
-        if (editable) {
+        if (this.changeable === false) {
             return (
                 <Input
-                    autoFocus
+                    disabled={true}
                     defaultValue={cellTitle}
-                    onKeyDown={this.onKeyDown}
-                    onBlur={this.onBlur}
                 />
-            );
+            )
+        } else {
+            if (editable) {
+                return (
+                    <Input
+                        autoFocus
+                        defaultValue={cellTitle}
+                        onKeyDown={this.onKeyDown}
+                        onBlur={this.onBlur}
+                    />
+                );
+            }
+            return <span onDoubleClick={this.onDblClick}>{cellTitle}</span>;
         }
-        return <span onDoubleClick={this.onDblClick}>{cellTitle}</span>;
     }
 }
 

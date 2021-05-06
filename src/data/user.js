@@ -1,6 +1,6 @@
 let User = {
-    userName : 'chiling.cy',
-    userId   : 1
+    userName : 'interpidtjuniversity',
+    userId   : 0
 }
 
 export default User
