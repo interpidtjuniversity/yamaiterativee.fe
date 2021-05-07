@@ -27,7 +27,6 @@ class IterationPage extends Component {
     constructor(props) {
         super(props);
         this.iterationId = this.props.iterationId
-        this.iterationId = 1
     }
 
 
@@ -46,7 +45,7 @@ class IterationPage extends Component {
             ReactDOM.unmountComponentAtNode(iterEnvPipelineInfoMountDiv)
             let pipelines = newVal.map((item, index) => {
                 return (
-                    <Collapse style={{marginLeft:200, width:1400, background: "#F8F8F8"}}>
+                    <Collapse style={{marginLeft:100, width:1400, background: "#F8F8F8"}}>
                         <Panel title={item.actionInfo}>
                             <Pipeline iterationId={this.iterationId} pipelineData={item} stepLogRef={this.stepLogRef} pipelineDataCanvasId={index}/>
                         </Panel>

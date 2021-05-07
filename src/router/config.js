@@ -44,3 +44,8 @@ global.flowcenter= Loadable({
 	loader: () => import('../page/contents/FlowCenter'),
 	loading: Loading,
 });
+
+global.iteration = Loadable({
+	loader: () => import('../page/contents/Iteration'),
+	loading: Loading,
+});

@@ -15,6 +15,7 @@ class HomePageContent extends React.Component {
 					<Route exact path='/home/release' component={global.release}/>
 					<Route exact path='/home/servers' component={global.servers}/>
 					<Route exact path='/home/flow-center' component={global.flowcenter}/>
+					<Route exact path='/home/iterations/:iterId' component={global.iteration}/>
 
 				</Switch>
 			</div>
