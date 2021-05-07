@@ -1,4 +1,4 @@
-import react from 'react'g
+import react from 'react'
 import IterationPage from "./IterationPage";
 import IterationInitPage from "./IterationInitPage";
 

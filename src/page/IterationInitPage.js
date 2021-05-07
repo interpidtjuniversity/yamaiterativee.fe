@@ -1,6 +1,7 @@
 import react from 'react'
-import IterationPage from "./IterationPage";
 
+import { ResponsiveGrid } from '@alifd/next';
+const { Cell } = ResponsiveGrid;
 
 class IterationInitPage extends react.Component{
 
@@ -11,7 +12,32 @@ class IterationInitPage extends react.Component{
 
     render() {
         return(
-            <div>{this.iterationId}</div>
+            <ResponsiveGrid gap={20}>
+
+                <Cell colSpan={12} rowSpan={1}>
+                    <div>4654646</div>
+                </Cell>
+
+                <Cell colSpan={3}>
+                    <div>4654646</div>
+                </Cell>
+
+                <Cell colSpan={3}>
+                    <div>4654646</div>
+                </Cell>
+
+                <Cell colSpan={3}>
+                    <div>4654646</div>
+                </Cell>
+
+                <Cell colSpan={3}>
+                    <div>4654646</div>
+                </Cell>
+
+                <Cell colSpan={12}>
+                    <div>4654646</div>
+                </Cell>
+            </ResponsiveGrid>
         )
     }
 }
