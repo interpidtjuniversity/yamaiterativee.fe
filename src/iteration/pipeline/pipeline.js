@@ -16,8 +16,11 @@ class Pipeline extends Component {
         super(props);
         this.iterationId = props.iterationId
         this.pipelineData = props.pipelineData
+        this.actionState = props.state
         for (let i = 0; i < this.pipelineData['nodes'].length; i++) {
             this.pipelineData['nodes'][i].Class = Stage;
+            this.pipelineData['nodes'][i].iterationId = this.iterationId;
+            this.pipelineData['nodes'][i].actionState = this.actionState;
         }
         for (let i = 0; i < this.pipelineData['edges'].length; i++) {
             this.pipelineData['edges'][i].Class = BaseEdge;

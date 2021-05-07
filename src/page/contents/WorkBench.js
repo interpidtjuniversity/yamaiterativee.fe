@@ -1,8 +1,9 @@
 import react from 'react'
 
 import User from "../../data/user";
-import {Box, Tab, Dropdown, Menu, Drawer, Form, Input, Select, Message} from '@alifd/next'
+import {Box, Tab, Dropdown, Menu, Drawer, Form, Input, Select, Message, ResponsiveGrid, Card} from '@alifd/next'
 import '../../static/css/home/WorkBench.css';
+import '../../static/css/home/Servers.css';
 import {Button} from "antd";
 import axios from "axios";
 import qs from 'qs'
@@ -117,7 +118,9 @@ class StanderIteration extends react.Component {
             repos:[],
             owner:"",
             repo:"",
+            allUsers:[],
         }
+        this.IterType = "basice MR"
         this.userRepoSelectRef = React.createRef()
 
     }
@@ -155,6 +158,35 @@ class StanderIteration extends react.Component {
             Message.error("Please select the Application owner")
         }
     }
+    queryUser = () => {
+        if (this.state.allUsers.length === 0) {
+            const _this = this
+            axios.get("/api/v1/home/application/newapplication/allusers").then(function (allUsers) {
+                _this.setState({
+                    allUsers: allUsers.data
+                })
+            }).catch(function (error){})
+        }
+    }
+    onSubmit = (value) => {
+        let self = false
+        for(let i=0; i<value.admins.length; i++) {
+            if (value.admins[i] === User.userId) {
+                self = true
+                break
+            }
+        }
+        if (!self) {
+            value.admins.push(User.userId)
+        }
+        value.creator = User.userId
+        value.admins = value.admins.join()
+        axios.post("/api/v1/home/workbench/newiteration/new", qs.stringify(value))
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error){})
+    };
+    onCancel = () => {};
 
     submitCreateIterationForm =() => {
         let form = {
@@ -172,24 +204,63 @@ class StanderIteration extends react.Component {
 
     render() {
         return (
-            <Form style={{ width: "60%" }} {...this.formItemLayout} colon>
-                <this.FormItem
-                    label="OwnerName:"
-                    required
-                    requiredMessage="Please select the Application owner"
-                >
-                    <Select placeholder="Please select the Application owner" dataSource={this.state.owners} stype={{width:"100%"}} onChange={this.userNameSelectChange} onClick={this.userNameSelectClick} hasArrow={false} showSearch={true}>
-                    </Select>
-                </this.FormItem>
-                <this.FormItem
-                    label="Application:"
-                    required
-                    requiredMessage="Please specify the Application name"
-                >
-                    <Select ref={this.userRepoSelectRef} placeholder="Please select the Repository" stype={{width:"100%"}} onClick={this.userRepoSelectClick} onChange={this.userRepoSelectChange} dataSource={this.state.repos} hasArrow={false} showSearch={true}>
-                    </Select>
-                </this.FormItem>
-            </Form>
+            <Card.Content>
+                <Form className="HierarchicalForm">
+                    <Form.Item label="创建人">
+                        <Input disabled={true} name="creator" value={User.userName} />
+                    </Form.Item>
+                    <this.FormItem
+                        label="仓库拥有者:"
+                        required
+                        requiredMessage="Please select the Application owner"
+                    >
+                        <Select name="appOwner" placeholder="Please select the Application owner" dataSource={this.state.owners} stype={{width:"100%"}} onChange={this.userNameSelectChange} onClick={this.userNameSelectClick} hasArrow={true} showSearch={true}>
+                        </Select>
+                    </this.FormItem>
+                    <this.FormItem
+                        label="仓库名称:"
+                        required
+                        requiredMessage="Please specify the Application name"
+                    >
+                        <Select name="appName" placeholder="Please select the Application" stype={{width:"100%"}} onClick={this.userRepoSelectClick} onChange={this.userRepoSelectChange} dataSource={this.state.repos} hasArrow={true} showSearch={true}>
+                        </Select>
+                    </this.FormItem>
+                    <Form.Item label="迭代类型">
+                        <Input disabled={true} name="iterType" value={this.IterType} />
+                    </Form.Item>
+                    <Form.Item label="迭代成员">
+                        <Select
+                            maxTagCount={2}
+                            maxTagPlaceholder={(values: []) => `+${values.length - 2}`}
+                            name="admins"
+                            mode="multiple"
+                            placeholder="请选择迭代成员"
+                            onClick={this.queryUser}
+                        >
+                            {
+                                this.state.allUsers.map((user, index) => {
+                                    return <Select.Option value={index} key={index}>{user}</Select.Option>
+                                })
+                            }
+                        </Select>
+                    </Form.Item>
+                    <Form.Item>
+                        <Box direction="row" spacing={8}>
+                            <Form.Submit
+                                validate
+                                onClick={(value, errors) => (errors ? null : this.onSubmit(value))}
+                                className="Button"
+                                type="primary"
+                            >
+                                提交
+                            </Form.Submit>
+                            <Button className="Button" onClick={this.onCancel}>
+                                退回
+                            </Button>
+                        </Box>
+                    </Form.Item>
+                </Form>
+            </Card.Content>
         )
     }
 }

@@ -18,7 +18,8 @@ class Stage extends Node {
     this.actionId_stageId = opts.actionId_stageId;
     this.stageId = opts.stageId
     this.actionId = opts.actionId
-    this.actionState = opts.state
+    this.actionState = opts.actionState
+    this.stageState = opts.state
     this.stageStateRequestUrl = "/api/v1/iteration/"+opts.iterationId+"/action/"+this.actionId+"/stage/"+this.stageId+"/state"
     this.actionStateRequestUrl = "/api/v1/iteration/"+opts.iterationId+"/action/"+this.actionId+"/state"
     this.const = new IterationChildrenState()
@@ -35,8 +36,12 @@ class Stage extends Node {
     this._createText(container);
     this._createSteps(container);
 
-    let stageFetcher = new APIFetcher(this.stageStateRequestUrl, this.parser, this.stageCallback)
-    this.stageE = new TaskExecutor(stageFetcher, 1000)
+    if (this.actionState === this.const.PipelineStateRunning || this.actionState === this.const.PipelineStateInit) {
+      let stageFetcher = new APIFetcher(this.stageStateRequestUrl, this.parser, this.stageCallback)
+      this.stageE = new TaskExecutor(stageFetcher, 1000)
+    } else {
+      container.css('background', this.const.ColorMap.get(this.stageState))
+    }
 
     // let actionFetcher = new APIFetcher(this.actionStateRequestUrl, this.parser, this.actionCallback)
     // this.actionE = new TaskExecutor(actionFetcher, 3000)

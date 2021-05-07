@@ -136,7 +136,6 @@ class CreateApplicationForm extends react.Component {
     state = {
         authType: 1,
         allUsers: [],
-        authUsers: [],
         appImage: "Java Spring",
         defaultYamaX: [],
     }
@@ -187,7 +186,7 @@ class CreateApplicationForm extends react.Component {
             })
         }
         this.queryUser = () => {
-            if (this.state.authUsers.length === 0) {
+            if (this.state.allUsers.length === 0) {
                 const _this = this
                 axios.get("/api/v1/home/application/newapplication/allusers").then(function (allUsers) {
                     _this.setState({
