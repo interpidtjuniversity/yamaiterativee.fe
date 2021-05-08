@@ -1,0 +1,94 @@
+.iterations {
+  height: 100%;
+}
+.iterations-line.title-line-wrapper {
+  width: 312px;
+  margin: 24px auto 76px;
+}
+.iterations-line.title-line-wrapper .title-line {
+  animation: TitleLineTitleLine 3s ease-in-out 1.5s infinite;
+}
+
+.iterations-bg {
+  font-size: 320px;
+  color: #ebedf0;
+  position: absolute;
+  width: 85%;
+  text-align: center;
+  opacity: .25;
+  top: 0;
+  transform: translateY(900px);
+}
+
+.iterations-box-wrapper {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+.iterations-box-wrapper li {
+  width: 20%;
+  display: inline-block;
+  will-change: transform;
+}
+.iterations-box-wrapper li .iterations-box {
+  width: 300px;
+  margin-left: 40%;
+  text-align: center;
+  position: relative;
+}
+.iterations-box-wrapper li .iterations-box .iterations-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  margin: 20px auto 32px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  transition: box-shadow .3s ease-out, transform .3s ease-out;
+}
+.iterations-box-wrapper li .iterations-box .iterations-image :hover{
+  transform: translateY(-5px);
+}
+.iterations-box-wrapper li .iterations-box h3 {
+  color: #0d1a26;
+  font-size: 16px;
+  margin: 8px auto;
+}
+
+.iterations-point-wrapper {
+  position: absolute;
+  width: 0;
+  left: 50%;
+  top: 0;
+}
+.iterations-point-wrapper .point-0 {
+  width: 4px;
+  height: 4px;
+}
+.iterations-point-wrapper .point-2 .point-ring {
+  width: 10px;
+  height: 10px;
+}
+.iterations-point-wrapper .point-ring {
+  border-style: solid;
+  border-width: 1px;
+  background: transparent !important;
+}
+.iterations-point-wrapper .point-1 {
+  width: 6px;
+  height: 6px;
+}
+.iterations-point-wrapper .point-3 {
+  width: 15px;
+  height: 15px;
+}
+.iterations-point-wrapper i {
+  display: inline-block;
+  border-radius: 100%;
+  position: absolute;
+  opacity: 0;
+  transform: translate(0, 30px);
+}

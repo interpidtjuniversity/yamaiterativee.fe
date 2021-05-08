@@ -12,6 +12,8 @@ class Iteration extends react.Component{
     constructor(props) {
         super(props);
         this.iterationId = this.props.match.params.iterId
+        this.owner = this.props.location.query.owner
+        this.application = this.props.location.query.application
         this.iterationStateAPI = "/api/v1/iteration/"+this.iterationId+"/info"
     }
 
@@ -33,7 +35,9 @@ class Iteration extends react.Component{
     render() {
         console.log("tigger")
         return(
-            <IterationManager initialized={this.state.initialized} iterationId={this.iterationId}/>
+            <IterationManager initialized={this.state.initialized} iterationId={this.iterationId}
+                              application={this.application} owner={this.owner}
+            />
         )
     }
 }

@@ -27,6 +27,8 @@ class IterationPage extends Component {
     constructor(props) {
         super(props);
         this.iterationId = this.props.iterationId
+        this.iterationId = this.props.iterationId
+        this.application = this.props.application
     }
 
 
