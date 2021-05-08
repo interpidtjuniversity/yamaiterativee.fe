@@ -29,15 +29,16 @@ class IterationEnv extends Component{
         const _envMap = envMap
         axios.get(this.baseRequestUrl)
             .then(function (response) {
+                let stateArray = response.data.stateArray
                 let cur = 0
-                for(let index=0; index < response.data.length; index++) {
-                    if (response.data[index][2] === 'process') {
+                for(let index=0; index < stateArray.length; index++) {
+                    if (stateArray[index][2] === 'process') {
                         cur = index
                         break
                     }
                 }
                 _this.setState({
-                    steps: response.data.map((item, index) => <Step.Item key={index} title={item[0]} content={item[1]} onClick={(i,s) => _this.switchStep(index, item[2])}/>),
+                    steps: stateArray.map((item, index) => <Step.Item key={index} title={item[0]} content={item[1]} onClick={(i,s) => _this.switchStep(index, item[2])}/>),
                     current: cur
                 })
 

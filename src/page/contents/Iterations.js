@@ -58,8 +58,8 @@ class Iterations extends react.Component{
             }];
     }
 
-    gotoIterationDetails = (id, o, a) => {
-        this.props.history.push({pathname:"/home/iterations/"+id, query:{owner: o, application: a}})
+    gotoIterationDetails = (id) => {
+        this.props.history.push({pathname:"/home/iterations/"+id})
     }
 
     render() {
@@ -88,7 +88,7 @@ class Iterations extends react.Component{
                         onMouseEnter={() => { this.onMouseOver(i); }}
                         onMouseLeave={this.onMouseOut}
                         hoverable={true}
-                        onClick={this.gotoIterationDetails.bind(this, item.id, item.owner, item.application)}
+                        onClick={this.gotoIterationDetails.bind(this, item.id)}
                     >
                         <TweenOneGroup
                             className="iterations-point-wrapper"

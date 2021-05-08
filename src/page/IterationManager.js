@@ -8,18 +8,16 @@ class IterationManager extends react.Component{
     constructor(props) {
         super(props);
         this.iterationId = this.props.iterationId
-        this.application = this.props.application
-        this.owner = this.props.owner
     }
 
     render() {
         if (this.props.initialized === true) {
             return(
-                <IterationPage iterationId={this.iterationId} owner={this.owner} application={this.application}/>
+                <IterationPage iterationId={this.iterationId} owner={this.props.owner} application={this.props.application} iterBranch={this.props.iterBranch}/>
             )
         } else if (this.props.initialized === false) {
             return(
-                <IterationInitPage iterationId={this.iterationId} owner={this.owner} application={this.application}/>
+                <IterationInitPage iterationId={this.iterationId} owner={this.props.owner} application={this.props.application} iterBranch={this.props.iterBranch}/>
             )
         } else {
             return (

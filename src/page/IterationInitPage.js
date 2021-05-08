@@ -16,12 +16,16 @@ class IterationInitPage extends react.Component{
     constructor(props) {
         super(props);
         this.iterationId = this.props.iterationId
-        this.iterationId = this.props.iterationId
+        this.owner = this.props.owner
         this.application = this.props.application
+        this.iterBranch = this.props.iterBranch
     }
 
     newServer = () => {
-        alert("new server")
+        alert(this.iterationId)
+        alert(this.owner)
+        alert(this.application)
+        alert(this.iterBranch)
     }
 
     render() {
