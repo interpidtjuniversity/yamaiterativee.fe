@@ -19,7 +19,8 @@ class Applications extends react.Component{
     constructor(props) {
         super(props);
         this.state = {
-            createFormVisible: false
+            createFormVisible: false,
+            importFormVisible: false,
         }
 
         this.openCreateApplicationFButton = ()=> {
@@ -30,6 +31,16 @@ class Applications extends react.Component{
         this.closeCreateApplicationFButton = (reason, e) => {
             this.setState({
                 createFormVisible: false
+            })
+        }
+        this.openImportApplicationFButton = ()=> {
+            this.setState({
+                importFormVisible: true
+            })
+        }
+        this.closeImportApplicationFButton = (reason, e) => {
+            this.setState({
+                importFormVisible: false
             })
         }
         this.formItemLayout = {
@@ -113,6 +124,9 @@ class Applications extends react.Component{
                         <Button size="medium" type="primary" onClick={this.openCreateApplicationFButton} style={{width:"50%", marginLeft:"25%"}}>
                             新建应用
                         </Button>
+                        <Button size="medium" type="primary" onClick={this.openImportApplicationFButton} style={{width:"50%", marginLeft:"25%"}}>
+                            导入应用
+                        </Button>
                     </Box>
 
                 </Box>
@@ -126,17 +140,42 @@ class Applications extends react.Component{
                 >
                     <CreateApplicationForm/>
                 </Drawer>
+                <Drawer title="导入应用"
+                        placement="right"
+                        visible={this.state.importFormVisible}
+                        onClose={this.closeImportApplicationFButton}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <ImportApplicationForm/>
+                </Drawer>
             </div>
         )
     }
 }
 
+class ImportApplicationForm extends react.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return(
+            <Card.Content>
+                <Form className="HierarchicalForm">
+
+                </Form>
+            </Card.Content>
+        )
+    }
+}
 
 class CreateApplicationForm extends react.Component {
     state = {
         authType: 1,
         allUsers: [],
-        appImage: "Java Spring",
+        defaultConfig: new Map(),
         defaultYamaX: [],
     }
 
@@ -195,13 +234,6 @@ class CreateApplicationForm extends react.Component {
                 }).catch(function (error){})
             }
         }
-        this.appImageChange = (value) => {
-            this.setState({
-                appImage: value
-            })
-            this.queryAppDefaultConfigs(value)
-        }
-
 
         this.YaMaXKeyColumnEdit = (value, index, record) => {
             return <EditablePane defaultTitle={value} index={index} changeable={record.changeable}  name="key" valueEdit={this.YaMaXEdit}/>
@@ -259,14 +291,27 @@ class CreateApplicationForm extends react.Component {
             }
         }
 
-        this.queryAppDefaultConfigs = (imageType) => {
-            // clear whitespace and toLowerCase
-            imageType = imageType.replace(/\s+/g, "").toLowerCase();
+        this.queryAppDefaultConfigs = (type, key) => {
             const _this = this
-            axios.get(_this.getNewAppDefaultConfigAPI+imageType)
+            debugger
+            if (key === undefined) {
+                let config = this.state.defaultConfig
+                config.delete(type)
+                let yamaX = this.generateDefaultYamaX(config)
+                this.setState({
+                    defaultYamaX: yamaX,
+                    defaultConfig: config
+                })
+                return
+            }
+            axios.get(_this.getNewAppDefaultConfigAPI+key)
                 .then(function (configs){
+                    let config = _this.state.defaultConfig
+                    config.set(type, configs.data)
+                    let yamaX = _this.generateDefaultYamaX(config)
                     _this.setState({
-                        defaultYamaX: configs.data
+                        defaultYamaX: yamaX,
+                        defaultConfig: config
                     })
                 })
                 .catch(function (error){
@@ -274,6 +319,17 @@ class CreateApplicationForm extends react.Component {
                         defaultYamaX: []
                     })
                 })
+        }
+
+        this.generateDefaultYamaX = (m) => {
+            let yamaX = []
+            debugger
+            for(let item of m.values()){
+                for(let i=0; i<item.length; i++) {
+                    yamaX.push(item[i])
+                }
+            }
+            return yamaX
         }
         /**
          * config
@@ -309,7 +365,6 @@ class CreateApplicationForm extends react.Component {
     }
 
     componentDidMount() {
-        this.queryAppDefaultConfigs(this.state.appImage)
     }
 
     render() {
@@ -365,28 +420,33 @@ class CreateApplicationForm extends react.Component {
                     </Form.Item>
                     <Form.Item label="应用资源配置">
                         <ResponsiveGrid gap={[0, 15]} columns={2} className="HierarchicalBlock">
-                            <Form.Item label="数据库配置" required requiredMessage="请选择数据库">
-                                <Select name="appDataBase" placeholder="请选择数据库" defaultValue="Mysql">
-                                    <Select.Option value={"Mysql"} key={1}>Mysql</Select.Option>
-                                    <Select.Option value={"OceanBase"} key={2}>OceanBase</Select.Option>
+                            <Form.Item label="数据库配置">
+                                <Select name="appDataBase" placeholder="请选择数据库" defaultValue="" onChange={this.queryAppDefaultConfigs.bind(this, "appDataBase")} hasClear={true}>
+                                    <Select.Option value="SPRING_MYSQL" key={1}>Mysql</Select.Option>
+                                    <Select.Option value="SPRING_OCEANBASE" key={2}>OceanBase</Select.Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="注册中心配置" required requiredMessage="请选择注册中心">
-                                <Select name="appRegistry" placeholder="请选择注册中心" defaultValue="Consul">
-                                    <Select.Option value={"Consul"} key={1}>Consul</Select.Option>
-                                    <Select.Option value={"Zookeeper"} key={2}>Zookeeper</Select.Option>
+                            <Form.Item label="注册中心配置">
+                                <Select name="appRegistry" placeholder="请选择注册中心" defaultValue="" onChange={this.queryAppDefaultConfigs.bind(this, "appRegistry")} hasClear={true}>
+                                    <Select.Option value="SPRING_CONSUL" key={1}>Consul</Select.Option>
+                                    <Select.Option value="SPRING_ZOOKEEPER" key={2}>Zookeeper</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item label="应用镜像配置" required requiredMessage="请选择应用镜像">
-                                <Select name="appImage" placeholder="请选择应用镜像" defaultValue="Java Spring" onChange={this.appImageChange}>
-                                    <Select.Option value={"Java Spring"} key={1}>Java Spring</Select.Option>
+                                <Select name="appImage" placeholder="请选择应用镜像" defaultValue="" onChange={this.queryAppDefaultConfigs.bind(this, "appImage")} hasClear={true}>
+                                    <Select.Option value="JAVA_SPRING" key={1}>Java Spring</Select.Option>
                                     <Select.Option value={"Golang"} key={2}>Golang</Select.Option>
                                     <Select.Option value={"Python"} key={3}>Python</Select.Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="链路追踪" required requiredMessage="请选择链路追踪镜像">
-                                <Select name="appTraceImage" placeholder="请选择链路追踪镜像" defaultValue="Zipkin">
-                                    <Select.Option value={1} key={1}>Zipkin</Select.Option>
+                            <Form.Item label="链路追踪">
+                                <Select name="appTraceImage" placeholder="请选择链路追踪镜像" defaultValue="" onChange={this.queryAppDefaultConfigs.bind(this,"appTraceImage")} hasClear={true}>
+                                    <Select.Option value="SPRING_ZIPKIN" key={1}>Zipkin</Select.Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item label="健康检查">
+                                <Select name="appHealthyCheck" placeholder="请选择健康检查" defaultValue="" onChange={this.queryAppDefaultConfigs.bind(this,"appHealthyCheck")} hasClear={true}>
+                                    <Select.Option value="SPRING_ACTUATOR" key={1}>Actuator</Select.Option>
                                 </Select>
                             </Form.Item>
 

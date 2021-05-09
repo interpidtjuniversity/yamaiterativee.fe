@@ -4,13 +4,13 @@ import * as React from "react";
 import ReactDOM from "react-dom"
 
 import '../../static/css/home/WorkBench.css';
-import '../../static/css/home/Servers.css';
 
 import RunningBackGround from '../../static/img/home/servers/running.svg'
 import ApplyingBackGround from '../../static/img/home/servers/applying.svg'
 import DeployingBackGround from '../../static/img/home/servers/deploying.svg'
 import IdleBackGround from '../../static/img/home/servers/idle.svg'
 import StoppedBackGround from '../../static/img/home/servers/stopped.svg'
+import CreateServerForm from "../form/CreateServerForm";
 
 import servers1 from "../../data/homepage/server/servers-page1"
 import servers2 from "../../data/homepage/server/servers-page2"
@@ -129,64 +129,6 @@ class Servers extends react.Component{
                     <CreateServerForm/>
                 </Drawer>
             </div>
-        )
-    }
-}
-
-
-class CreateServerForm extends react.Component {
-
-    state={
-        authType: 1
-    }
-
-    constructor(props) {
-        super();
-        this.onSubmit = () => {
-        };
-        this.onCancel = () => {
-        };
-    }
-
-
-    render() {
-        return (
-            <Card.Content>
-                <Form className="HierarchicalForm">
-                    <Form.Item label="应用名称" required requiredMessage="请输入应用名称">
-                        <Input name="applicationName" placeholder="请输入应用名称" />
-                    </Form.Item>
-                    <Form.Item label="服务器名称" required requiredMessage="请输入服务器名称">
-                        <Input name="serverName" placeholder="给服务器起个名字" />
-                    </Form.Item>
-                    <Form.Item label="服务器所属环境" required requiredMessage="请选择服务器所属环境">
-                        <Select name="serverEnv" placeholder="请选择服务器所属环境">
-                            <Select.Option value={1}>开发环境</Select.Option>
-                            <Select.Option value={2}>集成环境</Select.Option>
-                            <Select.Option value={3}>测试环境</Select.Option>
-                            <Select.Option value={4}>预发环境</Select.Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item label="项目描述">
-                        <Input.TextArea name="description" placeholder="请输入项目详细信息" rows={4} />
-                    </Form.Item>
-                    <Form.Item>
-                        <Box direction="row" spacing={8}>
-                            <Form.Submit
-                                validate
-                                onClick={(value, errors) => (errors ? null : this.onSubmit(value))}
-                                className="Button"
-                                type="primary"
-                            >
-                                提交
-                            </Form.Submit>
-                            <Button className="Button" onClick={this.onCancel}>
-                                退回
-                            </Button>
-                        </Box>
-                    </Form.Item>
-                </Form>
-            </Card.Content>
         )
     }
 }

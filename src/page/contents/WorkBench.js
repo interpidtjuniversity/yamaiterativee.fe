@@ -120,7 +120,7 @@ class StanderIteration extends react.Component {
             repo:"",
             allUsers:[],
         }
-        this.IterType = "basice MR"
+        this.IterType = "basic MR"
         this.userRepoSelectRef = React.createRef()
 
     }
@@ -171,15 +171,15 @@ class StanderIteration extends react.Component {
     onSubmit = (value) => {
         let self = false
         for(let i=0; i<value.admins.length; i++) {
-            if (value.admins[i] === User.userId) {
+            if (value.admins[i] === User.userName) {
                 self = true
                 break
             }
         }
         if (!self) {
-            value.admins.push(User.userId)
+            value.admins.push(User.userName)
         }
-        value.creator = User.userId
+        value.creator = User.userName
         value.admins = value.admins.join()
         axios.post("/api/v1/home/workbench/newiteration/new", qs.stringify(value))
             .then(function (response) {
@@ -239,11 +239,16 @@ class StanderIteration extends react.Component {
                         >
                             {
                                 this.state.allUsers.map((user, index) => {
-                                    return <Select.Option value={index} key={index}>{user}</Select.Option>
+                                    return <Select.Option value={user} key={index}>{user}</Select.Option>
                                 })
                             }
                         </Select>
                     </Form.Item>
+                    <this.FormItem required
+                               requiredMessage="Please describe your iteration">
+                        <Input.TextArea label="迭代描述" name="content" placeholder="Please describe your iteration"
+                        />
+                    </this.FormItem>
                     <Form.Item>
                         <Box direction="row" spacing={8}>
                             <Form.Submit

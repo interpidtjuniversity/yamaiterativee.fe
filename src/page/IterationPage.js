@@ -30,6 +30,8 @@ class IterationPage extends Component {
         this.owner = this.props.owner
         this.application = this.props.application
         this.iterBranch = this.props.iterBranch
+        this.iterTitle = this.props.iterTitle
+        this.iterState = this.props.iterState
     }
 
 

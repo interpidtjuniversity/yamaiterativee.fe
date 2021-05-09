@@ -8,6 +8,10 @@ import TweenOne from 'rc-tween-one';
 import {Card} from 'antd'
 import User from "../../data/user";
 import featuresCN from "../../data/homepage/iterations/iterations"
+import axios from "axios";
+import {Box, Pagination} from "@alifd/next";
+import servers1 from "../../data/homepage/server/servers-page1";
+import servers2 from "../../data/homepage/server/servers-page2";
 
 
 require("../../static/css/home/Iterations.css")
@@ -21,6 +25,8 @@ class Iterations extends react.Component{
         this.state = {
             hoverNum: null,
             isMobile: false,
+            iterations: [],
+            iterationsShow: [],
         };
         this.pointPos = [
             { x: -30, y: -10 },
@@ -30,6 +36,7 @@ class Iterations extends react.Component{
             { x: 35, y: 5 },
             { x: 50, y: 50, opacity: 0.2 },
         ];
+        this.GetAllUserIterationsAPI = "/api/v1/home/iterations/user/"+User.userName+"/all"
     }
     onMouseOver = (i) => {
         this.setState({
@@ -62,10 +69,27 @@ class Iterations extends react.Component{
         this.props.history.push({pathname:"/home/iterations/"+id})
     }
 
+    nextIterationPage = (value) => {
+        this.setState({
+            iterationsShow: this.state.iterations.slice((value-1)*8, value*8)
+        })
+    }
+
+    componentDidMount() {
+        const _this = this
+        axios.get(this.GetAllUserIterationsAPI).then(function (response) {
+            let show = response.data.slice(0, 8)
+            _this.setState({
+                iterations: response.data,
+                iterationsShow: show,
+            })
+        }).catch(function (error){})
+    }
+
     render() {
         const { hoverNum } = this.state;
         let children = [[], [], []];
-        featuresCN.forEach((item, i) => {
+        this.state.iterationsShow.forEach((item, i) => {
             const isHover = hoverNum === i;
             const pointChild = [
                 'point-0 left', 'point-0 right',
@@ -103,7 +127,7 @@ class Iterations extends react.Component{
                             className="iterations-image"
                             style={{
                                 boxShadow: `${isHover ? '0 12px 24px' :
-                                    '0 6px 12px'} ${item.shadowColor}`,
+                                    '0 6px 12px'} ${'rgba(245,34,45,.12)'}`,
                             }}
                         >
                             <img src={item.src} alt="img" style={i === 4 ? { marginLeft: -15 } : {}} />
@@ -151,6 +175,9 @@ class Iterations extends react.Component{
                     <OverPack>
                         {children}
                     </OverPack>
+                </div>
+                <div>
+                    <Pagination size={"large"} pageSize={8} total={this.state.iterations.length} defaultCurrent={1} onChange={this.nextIterationPage} style={{position:'fixed', marginLeft:"59%", top:"82%"}}/>
                 </div>
             </div>
         );
