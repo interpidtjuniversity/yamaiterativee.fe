@@ -193,6 +193,10 @@ class CreateApplicationForm extends react.Component {
         this.uploaderDoUpload = () => {
             this.uploaderRef.startUpload();
         }
+        this.saveYamaXDataTableRef = (ref) => {
+            if (!ref) return;
+            this.yamaXRef = ref.getInstance()
+        }
 
         this.onSubmit = (value) => {
             const _this = this
@@ -204,7 +208,6 @@ class CreateApplicationForm extends react.Component {
              * */
             value.authMembers = value.authMembers.join()
             value.configs = JSON.stringify(this.state.defaultYamaX)
-            console.log(value)
             value.image = value.image[0].imgURL
             axios.post("/api/v1/home/application/newapplication/new", qs.stringify(value))
                 .then(function (response) {
@@ -292,33 +295,38 @@ class CreateApplicationForm extends react.Component {
         }
 
         this.queryAppDefaultConfigs = (type, key) => {
+            debugger
             const _this = this
             debugger
             if (key === undefined) {
-                let config = this.state.defaultConfig
+                let config = _this.state.defaultConfig
                 config.delete(type)
-                let yamaX = this.generateDefaultYamaX(config)
-                this.setState({
-                    defaultYamaX: yamaX,
+                let yamaX = _this.generateDefaultYamaX(config)
+                _this.setState({
+                    defaultYamaX: [],
                     defaultConfig: config
+                },()=>{
+                    _this.setState({
+                        defaultYamaX: yamaX
+                    })
                 })
-                return
+            } else {
+                axios.get(_this.getNewAppDefaultConfigAPI + key)
+                    .then(function (configs) {
+                        let config = _this.state.defaultConfig
+                        config.set(type, configs.data)
+                        let yamaX = _this.generateDefaultYamaX(config)
+                        _this.setState({
+                            defaultYamaX: yamaX,
+                            defaultConfig: config
+                        })
+                    })
+                    .catch(function (error) {
+                        _this.setState({
+                            defaultYamaX: []
+                        })
+                    })
             }
-            axios.get(_this.getNewAppDefaultConfigAPI+key)
-                .then(function (configs){
-                    let config = _this.state.defaultConfig
-                    config.set(type, configs.data)
-                    let yamaX = _this.generateDefaultYamaX(config)
-                    _this.setState({
-                        defaultYamaX: yamaX,
-                        defaultConfig: config
-                    })
-                })
-                .catch(function (error){
-                    _this.setState({
-                        defaultYamaX: []
-                    })
-                })
         }
 
         this.generateDefaultYamaX = (m) => {
@@ -485,7 +493,7 @@ class CreateApplicationForm extends react.Component {
                                     保存
                                 </Button>
                             </Box>
-                            <Table dataSource={this.state.defaultYamaX} fixedHeader={true} maxBodyHeight={200}>
+                            <Table dataSource={this.state.defaultYamaX} fixedHeader={true} maxBodyHeight={200} ref={this.saveYamaXDataTableRef}>
                                 <Table.Column
                                     title="key"
                                     cell={this.YaMaXKeyColumnEdit}
@@ -600,6 +608,11 @@ class EditablePane extends React.Component{
         this.index = this.props.index
         this.name = this.props.name
         this.changeable = this.props.changeable
+        this.state = {
+            cellTitle: this.props.defaultTitle,
+            editable: false
+        };
+
         this.onKeyDown = e => {
             const { keyCode } = e;
             if (keyCode > 36 && keyCode < 41) {
@@ -611,49 +624,38 @@ class EditablePane extends React.Component{
                 editable: false,
                 cellTitle: e.target.value
             });
-            this.props.valueEdit(this.index, this.name, e.target.value)
+            this.props.valueEdit(this.props.index, this.name, e.target.value)
         };
         this.onDblClick = () => {
             this.setState({
                 editable: true
             });
         };
-        this.state = {
-            cellTitle: props.defaultTitle,
-            editable: false
-        };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.defaultTitle !== this.state.cellTitle) {
-            this.setState({
-                cellTitle: nextProps.defaultTitle
-            });
-        }
-    }
+
 
     // Stop bubble up the events of keyUp, keyDown, keyLeft, and keyRight
     render() {
-        const { cellTitle, editable } = this.state;
         if (this.changeable === false) {
             return (
                 <Input
                     disabled={true}
-                    defaultValue={cellTitle}
+                    defaultValue={this.props.defaultTitle}
                 />
             )
         } else {
-            if (editable) {
+            if (this.state.editable) {
                 return (
                     <Input
                         autoFocus
-                        defaultValue={cellTitle}
+                        defaultValue={this.state.cellTitle}
                         onKeyDown={this.onKeyDown}
                         onBlur={this.onBlur}
                     />
                 );
             }
-            return <span onDoubleClick={this.onDblClick}>{cellTitle}</span>;
+            return <span onDoubleClick={this.onDblClick}>{this.state.cellTitle}</span>;
         }
     }
 }
