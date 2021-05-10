@@ -8,6 +8,7 @@ import User from "../../data/user";
 import '../../static/css/home/Servers.css';
 import '../../static/css/home/WorkBench.css';
 import axios from "axios";
+import qs from "qs";
 
 class CreateServerForm extends react.Component {
 
@@ -19,8 +20,8 @@ class CreateServerForm extends react.Component {
         super();
         this.serverType = [{id:0,title:"开发环境"}, {id:1,title:"稳定环境"}, {id:2,title:"测试环境"}, {id:3,title:"预发环境"}, {id:4,title:"正式环境"}]
         this.NewServerAPI = "/api/v1/home/server/newserver/new"
-        this.onSubmit = () => {
-            axios.post(this.NewServerAPI).then(function (response) {
+        this.onSubmit = (value) => {
+            axios.post(this.NewServerAPI, qs.stringify(value)).then(function (response) {
 
             }).catch(function (exception) {})
         };
@@ -62,6 +63,9 @@ class CreateServerForm extends react.Component {
                                 }))
                             }
                         </Select>
+                    </Form.Item>
+                    <Form.Item label="服务器镜像" required requiredMessage="请输入服务器镜像">
+                        <Input name="appType" placeholder="请输入服务器镜像" defaultValue={this.props.serverImage} disabled={this.props.autoFill}/>
                     </Form.Item>
                     <Form.Item label="申请人" required requiredMessage="请输入申请人">
                         <Input name="owner" placeholder="请输入申请人" defaultValue={User.userName} disabled={this.props.autoFill}/>

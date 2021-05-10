@@ -1,5 +1,5 @@
 import react from 'react'
-import {Pagination, Box, Card, Button, Drawer, Form, Select, Input, Icon, ResponsiveGrid, Upload, Table} from '@alifd/next';
+import {Pagination, Box, Card, Button, Drawer, Form, Select, Input, Icon, ResponsiveGrid, Upload, Table, Checkbox} from '@alifd/next';
 import * as React from "react";
 import ReactDOM from "react-dom"
 
@@ -20,7 +20,6 @@ class Applications extends react.Component{
         super(props);
         this.state = {
             createFormVisible: false,
-            importFormVisible: false,
         }
 
         this.openCreateApplicationFButton = ()=> {
@@ -31,16 +30,6 @@ class Applications extends react.Component{
         this.closeCreateApplicationFButton = (reason, e) => {
             this.setState({
                 createFormVisible: false
-            })
-        }
-        this.openImportApplicationFButton = ()=> {
-            this.setState({
-                importFormVisible: true
-            })
-        }
-        this.closeImportApplicationFButton = (reason, e) => {
-            this.setState({
-                importFormVisible: false
             })
         }
         this.formItemLayout = {
@@ -124,9 +113,6 @@ class Applications extends react.Component{
                         <Button size="medium" type="primary" onClick={this.openCreateApplicationFButton} style={{width:"50%", marginLeft:"25%"}}>
                             新建应用
                         </Button>
-                        <Button size="medium" type="primary" onClick={this.openImportApplicationFButton} style={{width:"50%", marginLeft:"25%"}}>
-                            导入应用
-                        </Button>
                     </Box>
 
                 </Box>
@@ -139,16 +125,6 @@ class Applications extends react.Component{
                         }
                 >
                     <CreateApplicationForm/>
-                </Drawer>
-                <Drawer title="导入应用"
-                        placement="right"
-                        visible={this.state.importFormVisible}
-                        onClose={this.closeImportApplicationFButton}
-                        style={
-                            {width: "60%"}
-                        }
-                >
-                    <ImportApplicationForm/>
                 </Drawer>
             </div>
         )
@@ -174,6 +150,7 @@ class ImportApplicationForm extends react.Component {
 class CreateApplicationForm extends react.Component {
     state = {
         authType: 1,
+        appIsImport: false,
         allUsers: [],
         defaultConfig: new Map(),
         defaultYamaX: [],
@@ -219,6 +196,12 @@ class CreateApplicationForm extends react.Component {
         this.appAuthTypeChange = (value) => {
             this.setState({
                 authType: value
+            })
+        }
+        // for import create type display
+        this.importApp = (checked, e) => {
+            this.setState({
+                appIsImport: checked
             })
         }
         // for exist assert
@@ -425,6 +408,22 @@ class CreateApplicationForm extends react.Component {
                                 </ResponsiveGrid.Cell>
                                 )}
                             </ResponsiveGrid>
+                    </Form.Item>
+                    <Form.Item label="创建方式">
+                        <ResponsiveGrid gap={[0, 15]} columns={2} className="HierarchicalBlock">
+                            <ResponsiveGrid.Cell>
+                                <Checkbox onChange={this.importApp}>
+                                    导入项目
+                                </Checkbox>
+                                {
+                                    this.state.appIsImport && (
+                                        <Form.Item label="YamaHubUrl" required requiredMessage="请填写仓库地址">
+                                            <Input name="yamaHubUrl" placeholder="请填写仓库地址"/>
+                                        </Form.Item>
+                                    )
+                                }
+                            </ResponsiveGrid.Cell>
+                        </ResponsiveGrid>
                     </Form.Item>
                     <Form.Item label="应用资源配置">
                         <ResponsiveGrid gap={[0, 15]} columns={2} className="HierarchicalBlock">

@@ -1,5 +1,5 @@
 import react from 'react'
-import {Pagination, Box, Card, Button, Drawer, Form, Select, Input, Radio, ResponsiveGrid } from '@alifd/next';
+import {Pagination, Box, Card, Button, Drawer, Menu } from '@alifd/next';
 import * as React from "react";
 import ReactDOM from "react-dom"
 
@@ -12,17 +12,21 @@ import IdleBackGround from '../../static/img/home/servers/idle.svg'
 import StoppedBackGround from '../../static/img/home/servers/stopped.svg'
 import CreateServerForm from "../form/CreateServerForm";
 
-import servers1 from "../../data/homepage/server/servers-page1"
-import servers2 from "../../data/homepage/server/servers-page2"
 import APIFetcher from "../../axios/task/APIFetcher";
 import TaskExecutor from "../../axios/task/TaskExecutor";
+import axios from "axios";
+import User from "../../data/user";
+
+const {SubMenu, Item, Divider} = Menu
 
 class Servers extends react.Component{
     state = {
-        createFormVisible: false
+        createFormVisible: false,
+        userServers: []
     }
     constructor(props) {
         super(props);
+        this.GetUserAllServerAPI = "/api/v1/home/server/user/"+User.userName+"/all"
 
         this.openCreateServerFButton = ()=> {
             this.setState({
@@ -46,12 +50,7 @@ class Servers extends react.Component{
 
 
     nextServerPage = (value) => {
-        let data;
-        if (value === 1) {
-            data = servers1
-        } else if (value === 2) {
-            data = servers2
-        }
+        let data = this.state.userServers.slice(6*(value-1), 6*value)
 
         for(let i=0; i < 6; i++) {
             let parentId = "Servers-server-" + i;
@@ -59,15 +58,15 @@ class Servers extends react.Component{
             ReactDOM.unmountComponentAtNode(parent)
             if (i < data.length) {
                 let server = <Server
-                    applicationName={data[i].applicationName}
-                    branchName={data[i].branchName}
+                    applicationName={data[i].appName}
+                    branchName={data[i].deployBranch}
                     applyTime={data[i].applyTime}
                     ip={data[i].ip}
                     env={data[i].env}
                     owner={data[i].owner}
-                    status={data[i].status}
+                    status={data[i].state}
                     index={data[i].index}
-                    serverName={data[i].serverName}
+                    serverName={data[i].name}
                 />
                 ReactDOM.render(server, parent);
             }
@@ -75,7 +74,15 @@ class Servers extends react.Component{
     }
 
     componentDidMount() {
-        this.nextServerPage(1);
+        const _this = this
+        axios.get(this.GetUserAllServerAPI)
+            .then(function (response){
+                _this.setState({
+                    userServers: response.data
+                })
+                _this.nextServerPage(1)
+            })
+            .catch(function (error){})
     }
 
     render() {
@@ -108,7 +115,7 @@ class Servers extends react.Component{
                             </Box>
                         </Box>
                         <Box className="box-h10p box" style={{background:"greenyellow"}}>
-                            <Pagination size={"large"} pageSize={6} total={10} defaultCurrent={1} onChange={this.nextServerPage} style={{marginLeft:"auto"}}/>
+                            <Pagination size={"large"} pageSize={6} total={this.state.userServers.length} defaultCurrent={1} onChange={this.nextServerPage} style={{marginLeft:"auto"}}/>
                         </Box>
                     </Box>
                     <Box direction="column" style={{height:"100%", width:"15%", background:"green"}}>
@@ -136,6 +143,11 @@ class Servers extends react.Component{
 
 let ServerMap = new Map([["running",RunningBackGround], ["deploying",DeployingBackGround],["applying",ApplyingBackGround],["idle",IdleBackGround],["stopped",StoppedBackGround]]);
 class Server extends react.Component {
+
+    state = {
+        selectedKeys: []
+    }
+
     constructor(props) {
         super(props)
         this.applicationName = this.props.applicationName
@@ -166,16 +178,38 @@ class Server extends react.Component {
         //this.e.kill()
     }
 
+    onContextMenu = (e) => {
+        e.preventDefault();
+
+        const target = e.target;
+        const { top, left } = target.getBoundingClientRect();
+
+        Menu.create({
+            target: e.target,
+            offset: [e.clientX - left, e.clientY - top],
+            className: "context-menu",
+            popupClassName: "context-menu",
+            onItemClick: console.log,
+            selectedKeys: this.state.selectedKeys,
+            selectMode: "multiple",
+            children: [
+                <Item key="1">重启</Item>,
+                <Item key="2">部署</Item>,
+                <Item key="3">清除</Item>,
+            ]
+        });
+    };
+
     render() {
         let BK = ServerMap.get(this.status)
         return (
             <div>
-                <Card className="free-card" free>
+                <Card className="free-card" free onContextMenu={this.onContextMenu.bind(this)}>
                     <Card.Media
                         style={{ height: 140, backgroundImage:`url(${BK})`, backgroundSize:'50% 50%'}}
                     />
                     <Card.Header
-                        title={this.serverName}
+                        title={this.serverName.substring(18)}
                         subTitle={this.applicationName}
                     />
                     <Card.Divider />

@@ -27,6 +27,7 @@ class IterationInitPage extends react.Component{
         this.iterBranch = this.props.iterBranch
         this.iterTitle = this.props.iterTitle
         this.iterState = this.props.iterState
+        this.serverType = this.props.serverType
 
         this.openCreateServerFButton = ()=> {
             this.setState({
@@ -138,7 +139,8 @@ class IterationInitPage extends react.Component{
                         }
                 >
                     <CreateServerForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
-                                      iterationId={this.iterationId} iterState={this.iterState} autoFill={true}
+                                      iterationId={this.iterationId} iterState={this.iterState} autoFill={true} serverImage={this.serverType}
+                                      iterBranch={this.iterBranch}
                     />
                 </Drawer>
             </div>

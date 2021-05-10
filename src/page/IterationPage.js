@@ -32,6 +32,7 @@ class IterationPage extends Component {
         this.iterBranch = this.props.iterBranch
         this.iterTitle = this.props.iterTitle
         this.iterState = this.props.iterState
+        this.serverType = this.props.serverType
     }
 
 

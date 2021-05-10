@@ -27,6 +27,7 @@ class Iteration extends react.Component{
                     iterBranch: response.data.iterBranch,
                     iterTitle: response.data.iterTitle,
                     iterState: response.data.iterState,
+                    serverType: response.data.serverType,
                 })
             } else {
                 _this.setState({
@@ -36,6 +37,7 @@ class Iteration extends react.Component{
                     iterBranch: response.data.iterBranch,
                     iterTitle: response.data.iterTitle,
                     terState: response.data.iterState,
+                    serverType: response.data.serverType,
                 })
             }
         }).catch(function (error){})
@@ -45,7 +47,7 @@ class Iteration extends react.Component{
         return(
             <IterationManager initialized={this.state.initialized} iterationId={this.iterationId}
                               application={this.state.application} owner={this.state.owner} iterBranch={this.state.iterBranch}
-                              iterTitle={this.state.iterTitle} iterState={this.state.iterState}
+                              iterTitle={this.state.iterTitle} iterState={this.state.iterState} serverType={this.state.serverType}
             />
         )
     }
