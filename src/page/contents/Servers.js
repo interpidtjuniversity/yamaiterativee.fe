@@ -1,9 +1,10 @@
 import react from 'react'
-import {Pagination, Box, Card, Button, Drawer, Menu } from '@alifd/next';
+import {Pagination, Box, Card, Button, Drawer, Menu, Dialog, Select, Form, ResponsiveGrid} from '@alifd/next';
 import * as React from "react";
 import ReactDOM from "react-dom"
 
 import '../../static/css/home/WorkBench.css';
+import '../../static/css/home/Servers.css';
 
 import RunningBackGround from '../../static/img/home/servers/running.svg'
 import ApplyingBackGround from '../../static/img/home/servers/applying.svg'
@@ -15,6 +16,7 @@ import CreateServerForm from "../form/CreateServerForm";
 import APIFetcher from "../../axios/task/APIFetcher";
 import TaskExecutor from "../../axios/task/TaskExecutor";
 import axios from "axios";
+import qs from "qs";
 import User from "../../data/user";
 
 const {SubMenu, Item, Divider} = Menu
@@ -22,11 +24,20 @@ const {SubMenu, Item, Divider} = Menu
 class Servers extends react.Component{
     state = {
         createFormVisible: false,
-        userServers: []
+        userServers: [],
+        deployDialogVisible: false,
+        restartDialogVisible: false,
+        cleanDialogVisible: false,
+
+        currentServerName: "",
+        currentServerDeployBranch: "",
+        currentServerAllBranches: []
     }
     constructor(props) {
         super(props);
         this.GetUserAllServerAPI = "/api/v1/home/server/user/"+User.userName+"/all"
+        this.GetAppAllBranchesAPI = "/api/v1/home/application/branches/all"
+        this.DeployAPI = "/api/v1/home/server/newdeploy/new"
 
         this.openCreateServerFButton = ()=> {
             this.setState({
@@ -58,6 +69,7 @@ class Servers extends react.Component{
             ReactDOM.unmountComponentAtNode(parent)
             if (i < data.length) {
                 let server = <Server
+                    applicationOwner={data[i].appOwner}
                     applicationName={data[i].appName}
                     branchName={data[i].deployBranch}
                     applyTime={data[i].applyTime}
@@ -67,10 +79,67 @@ class Servers extends react.Component{
                     status={data[i].state}
                     index={data[i].index}
                     serverName={data[i].name}
+                    currentServerCallBack={this.setCurrentServerData}
                 />
                 ReactDOM.render(server, parent);
             }
         }
+    }
+
+    onDialogClose = (type, action) => {
+        if (type === "deploy") {
+            this.setState({
+                deployDialogVisible: false
+            })
+            if (action === "ok") {
+                let data = {
+                    serverName: this.state.currentServerName,
+                    appOwner: this.state.currentServerAppOwner,
+                    appName : this.state.currentServerAppName,
+                    deployBranch: this.state.currentServerDeployBranch,
+                }
+                const _this = this
+                axios.post(_this.DeployAPI ,qs.stringify(data))
+                    .then(function (response){
+
+                    })
+                    .catch(function (error){})
+            }
+        }
+    }
+
+    queryBranches = () => {
+        const _this = this
+        let data = {
+            appOwner: _this.state.currentServerAppOwner,
+            appName: _this.state.currentServerAppName,
+        }
+        axios.post(_this.GetAppAllBranchesAPI, qs.stringify(data))
+            .then(function (response){
+                _this.setState({
+                    currentServerAllBranches: response.data
+                })
+            })
+            .catch(function (error){})
+    }
+
+    setBranch = (value, actionType, item) => {
+        this.setState({
+            currentServerDeployBranch: value
+        })
+    }
+
+    setCurrentServerData = (dialog, appOwner, appName, serverName) => {
+        if (dialog === "deployDialog") {
+            this.setState({
+                deployDialogVisible: true
+            })
+        }
+        this.setState({
+            currentServerAppOwner: appOwner,
+            currentServerAppName: appName,
+            currentServerName: serverName,
+        })
     }
 
     componentDidMount() {
@@ -87,54 +156,78 @@ class Servers extends react.Component{
 
     render() {
         return(
-            <div className="list-item">
-                <Box direction="row" style={{width:"100%", height:"100%"}}>
-                    <Box direction="column" style={{width:"85%", height:"100%", background:"orange"}}>
-                        <Box className="box-h90p box" direction="column" style={{background:"red"}}>
-                            <Box className="box-h2p" direction="row">
-                                <Box className="box-w33">
-                                    <div id="Servers-server-0"/>
+            <div>
+                <div className="list-item">
+                    <Box direction="row" style={{width:"100%", height:"100%"}}>
+                        <Box direction="column" style={{width:"85%", height:"100%", background:"orange"}}>
+                            <Box className="box-h90p box" direction="column" style={{background:"red"}}>
+                                <Box className="box-h2p" direction="row">
+                                    <Box className="box-w33">
+                                        <div id="Servers-server-0"/>
+                                    </Box>
+                                    <Box className="box-w33">
+                                        <div id="Servers-server-1"/>
+                                    </Box>
+                                    <Box className="box-w33">
+                                        <div id="Servers-server-2"/>
+                                    </Box>
                                 </Box>
-                                <Box className="box-w33">
-                                    <div id="Servers-server-1"/>
-                                </Box>
-                                <Box className="box-w33">
-                                    <div id="Servers-server-2"/>
+                                <Box className="box-h2p" direction="row">
+                                    <Box className="box-w33">
+                                        <div id="Servers-server-3"/>
+                                    </Box>
+                                    <Box className="box-w33">
+                                        <div id="Servers-server-4"/>
+                                    </Box>
+                                    <Box className="box-w33">
+                                        <div id="Servers-server-5"/>
+                                    </Box>
                                 </Box>
                             </Box>
-                            <Box className="box-h2p" direction="row">
-                                <Box className="box-w33">
-                                    <div id="Servers-server-3"/>
-                                </Box>
-                                <Box className="box-w33">
-                                    <div id="Servers-server-4"/>
-                                </Box>
-                                <Box className="box-w33">
-                                    <div id="Servers-server-5"/>
-                                </Box>
+                            <Box className="box-h10p box" style={{background:"greenyellow"}}>
+                                <Pagination size={"large"} pageSize={6} total={this.state.userServers.length} defaultCurrent={1} onChange={this.nextServerPage} style={{marginLeft:"auto"}}/>
                             </Box>
                         </Box>
-                        <Box className="box-h10p box" style={{background:"greenyellow"}}>
-                            <Pagination size={"large"} pageSize={6} total={this.state.userServers.length} defaultCurrent={1} onChange={this.nextServerPage} style={{marginLeft:"auto"}}/>
+                        <Box direction="column" style={{height:"100%", width:"15%", background:"green"}}>
+                            <Button size="medium" type="primary" onClick={this.openCreateServerFButton} style={{width:"50%", marginLeft:"25%"}}>
+                                新建服务器
+                            </Button>
                         </Box>
-                    </Box>
-                    <Box direction="column" style={{height:"100%", width:"15%", background:"green"}}>
-                        <Button size="medium" type="primary" onClick={this.openCreateServerFButton} style={{width:"50%", marginLeft:"25%"}}>
-                            新建服务器
-                        </Button>
-                    </Box>
 
-                </Box>
-                <Drawer title="新建服务器"
-                        placement="right"
-                        visible={this.state.createFormVisible}
-                        onClose={this.closeCreateServerFButton}
-                        style={
-                            {width: "60%"}
-                        }
+                    </Box>
+                    <Drawer title="新建服务器"
+                            placement="right"
+                            visible={this.state.createFormVisible}
+                            onClose={this.closeCreateServerFButton}
+                            style={
+                                {width: "60%"}
+                            }
+                    >
+                        <CreateServerForm/>
+                    </Drawer>
+                </div>
+                <Dialog title="请选择一个分支并部署"
+                        visible={this.state.deployDialogVisible}
+                        onOk={this.onDialogClose.bind(this, "deploy", "ok")}
+                        onCancel={this.onDialogClose.bind(this, "deploy", "cancel")}
+                        onClose={this.onDialogClose.bind(this, "deploy")}
                 >
-                    <CreateServerForm/>
-                </Drawer>
+                    <Select
+                        maxTagCount={2}
+                        maxTagPlaceholder={(values: []) => `+${values.length - 2}`}
+                        name="deployBranch"
+                        placeholder="请选择部署分支"
+                        onClick={this.queryBranches}
+                        onChange={this.setBranch}
+                    >
+                        {
+                            this.state.currentServerAllBranches.map((branch, index) => {
+                                return <Select.Option value={branch} key={index}>{branch}</Select.Option>
+                            })
+                        }
+                    </Select>
+                </Dialog>
+
             </div>
         )
     }
@@ -150,6 +243,7 @@ class Server extends react.Component {
 
     constructor(props) {
         super(props)
+        this.applicationOwner = this.props.applicationOwner
         this.applicationName = this.props.applicationName
         this.ip = this.props.ip
         this.branchName = this.props.branchName
@@ -178,6 +272,16 @@ class Server extends react.Component {
         //this.e.kill()
     }
 
+    menuItemClick = (key, item, e) => {
+        if (key === "1") {
+
+        } else if (key === "2") {
+            this.props.currentServerCallBack("deployDialog", this.applicationOwner, this.applicationName, this.serverName)
+        } else if (key === "3") {
+
+        }
+    }
+
     onContextMenu = (e) => {
         e.preventDefault();
 
@@ -189,7 +293,7 @@ class Server extends react.Component {
             offset: [e.clientX - left, e.clientY - top],
             className: "context-menu",
             popupClassName: "context-menu",
-            onItemClick: console.log,
+            onItemClick: this.menuItemClick,
             selectedKeys: this.state.selectedKeys,
             selectMode: "multiple",
             children: [
