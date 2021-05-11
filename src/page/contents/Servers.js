@@ -31,6 +31,8 @@ class Servers extends react.Component{
 
         currentServerName: "",
         currentServerDeployBranch: "",
+        currentServerIP: "",
+        currentServerEnv: "",
         currentServerAllBranches: []
     }
     constructor(props) {
@@ -97,6 +99,8 @@ class Servers extends react.Component{
                     appOwner: this.state.currentServerAppOwner,
                     appName : this.state.currentServerAppName,
                     deployBranch: this.state.currentServerDeployBranch,
+                    serverIP: this.state.currentServerIP,
+                    serverEnv: this.state.currentServerEnv,
                 }
                 const _this = this
                 axios.post(_this.DeployAPI ,qs.stringify(data))
@@ -129,7 +133,7 @@ class Servers extends react.Component{
         })
     }
 
-    setCurrentServerData = (dialog, appOwner, appName, serverName) => {
+    setCurrentServerData = (dialog, appOwner, appName, serverName, serverIP, serverEnv) => {
         if (dialog === "deployDialog") {
             this.setState({
                 deployDialogVisible: true
@@ -139,6 +143,8 @@ class Servers extends react.Component{
             currentServerAppOwner: appOwner,
             currentServerAppName: appName,
             currentServerName: serverName,
+            currentServerIP: serverIP,
+            currentServerEnv: serverEnv,
         })
     }
 
@@ -276,7 +282,7 @@ class Server extends react.Component {
         if (key === "1") {
 
         } else if (key === "2") {
-            this.props.currentServerCallBack("deployDialog", this.applicationOwner, this.applicationName, this.serverName)
+            this.props.currentServerCallBack("deployDialog", this.applicationOwner, this.applicationName, this.serverName, this.ip, this.env)
         } else if (key === "3") {
 
         }
