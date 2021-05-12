@@ -9,6 +9,7 @@ import PeopleConfig from "../static/img/home/config/PeopleConfig.png"
 import RequirementConfig from "../static/img/home/config/RequirementConfig.png"
 import * as React from "react";
 import CreateServerForm from "./form/CreateServerForm";
+import ConfigChangeForm from "./form/ConfigChangeForm";
 
 const { Cell } = ResponsiveGrid;
 const { Meta } = Card
@@ -16,7 +17,8 @@ const { Meta } = Card
 class IterationInitPage extends react.Component{
 
     state = {
-        createFormVisible: false
+        createFormVisible: false,
+        modifyConfigFormVisible: false,
     }
 
     constructor(props) {
@@ -39,10 +41,24 @@ class IterationInitPage extends react.Component{
                 createFormVisible: false
             })
         }
+
+        this.openModifyConfigFButton = ()=> {
+            this.setState({
+                modifyConfigFormVisible: true
+            })
+        }
+        this.closeModifyConfigFButton = (reason, e) => {
+            this.setState({
+                modifyConfigFormVisible: false
+            })
+        }
     }
 
     newServer = () => {
         this.openCreateServerFButton()
+    }
+    modifyIterationConfig = () => {
+        this.openModifyConfigFButton()
     }
 
     render() {
@@ -82,6 +98,7 @@ class IterationInitPage extends react.Component{
                                 />
                             }
                             hoverable={true}
+                            onClick={this.modifyIterationConfig}
                         >
                             <Meta
                                 title="配置迭代"
@@ -140,7 +157,20 @@ class IterationInitPage extends react.Component{
                 >
                     <CreateServerForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
                                       iterationId={this.iterationId} iterState={this.iterState} autoFill={true} serverImage={this.serverType}
-                                      iterBranch={this.iterBranch}
+                                      iterBranch={this.iterBranch} formCloseCallBack={this.closeCreateServerFButton}
+                    />
+                </Drawer>
+
+                <Drawer title="更改配置"
+                        placement="right"
+                        visible={this.state.modifyConfigFormVisible}
+                        onClose={this.closeModifyConfigFButton}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <ConfigChangeForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
+                                      iterationId={this.iterationId} autoFill={true} formCloseCallBack={this.closeModifyConfigFButton}
                     />
                 </Drawer>
             </div>

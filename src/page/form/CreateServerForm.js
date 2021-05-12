@@ -20,12 +20,14 @@ class CreateServerForm extends react.Component {
         super();
         this.serverType = [{id:0,title:"开发环境"}, {id:1,title:"稳定环境"}, {id:2,title:"测试环境"}, {id:3,title:"预发环境"}, {id:4,title:"正式环境"}]
         this.NewServerAPI = "/api/v1/home/server/newserver/new"
+        const _this = this
         this.onSubmit = (value) => {
             axios.post(this.NewServerAPI, qs.stringify(value)).then(function (response) {
-
+                _this.props.formCloseCallBack()
             }).catch(function (exception) {})
         };
         this.onCancel = () => {
+            this.props.formCloseCallBack()
         };
     }
 
@@ -70,7 +72,7 @@ class CreateServerForm extends react.Component {
                     <Form.Item label="申请人" required requiredMessage="请输入申请人">
                         <Input name="owner" placeholder="请输入申请人" defaultValue={User.userName} disabled={this.props.autoFill}/>
                     </Form.Item>
-                    <Form.Item label="申请原因">
+                    <Form.Item label="申请原因" required requiredMessage="请输入申请原因">
                         <Input.TextArea name="description" placeholder="请输入申请原因" rows={4} />
                     </Form.Item>
                     <Form.Item>

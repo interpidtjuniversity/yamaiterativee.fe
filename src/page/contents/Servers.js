@@ -33,6 +33,7 @@ class Servers extends react.Component{
         currentServerDeployBranch: "",
         currentServerIP: "",
         currentServerEnv: "",
+        currentServerIterId: "",
         currentServerAllBranches: []
     }
     constructor(props) {
@@ -81,6 +82,7 @@ class Servers extends react.Component{
                     status={data[i].state}
                     index={data[i].index}
                     serverName={data[i].name}
+                    iterId={data[i].iterId}
                     currentServerCallBack={this.setCurrentServerData}
                 />
                 ReactDOM.render(server, parent);
@@ -101,6 +103,7 @@ class Servers extends react.Component{
                     deployBranch: this.state.currentServerDeployBranch,
                     serverIP: this.state.currentServerIP,
                     serverEnv: this.state.currentServerEnv,
+                    iterId: this.state.iterId,
                 }
                 const _this = this
                 axios.post(_this.DeployAPI ,qs.stringify(data))
@@ -120,6 +123,7 @@ class Servers extends react.Component{
         }
         axios.post(_this.GetAppAllBranchesAPI, qs.stringify(data))
             .then(function (response){
+                debugger
                 _this.setState({
                     currentServerAllBranches: response.data
                 })
@@ -133,7 +137,7 @@ class Servers extends react.Component{
         })
     }
 
-    setCurrentServerData = (dialog, appOwner, appName, serverName, serverIP, serverEnv) => {
+    setCurrentServerData = (dialog, appOwner, appName, serverName, serverIP, serverEnv, iterId) => {
         if (dialog === "deployDialog") {
             this.setState({
                 deployDialogVisible: true
@@ -145,6 +149,7 @@ class Servers extends react.Component{
             currentServerName: serverName,
             currentServerIP: serverIP,
             currentServerEnv: serverEnv,
+            currentServerIterId: iterId,
         })
     }
 
@@ -259,6 +264,7 @@ class Server extends react.Component {
         this.applyTime = this.props.applyTime
         this.index = this.props.index
         this.serverName = this.props.serverName
+        this.iterId = this.props.iterId
 
         // schedule       status|branchName
         this.fetcher = new APIFetcher("www.baidu.com", this.serverDataParser, this.serverCallBack)
@@ -282,7 +288,7 @@ class Server extends react.Component {
         if (key === "1") {
 
         } else if (key === "2") {
-            this.props.currentServerCallBack("deployDialog", this.applicationOwner, this.applicationName, this.serverName, this.ip, this.env)
+            this.props.currentServerCallBack("deployDialog", this.applicationOwner, this.applicationName, this.serverName, this.ip, this.env, this.iterId)
         } else if (key === "3") {
 
         }

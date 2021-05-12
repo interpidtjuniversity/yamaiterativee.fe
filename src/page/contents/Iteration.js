@@ -18,7 +18,6 @@ class Iteration extends react.Component{
     componentDidMount() {
         const _this = this
         axios.get(this.iterationStateAPI).then(function (response) {
-            debugger
             if (response.data.stateArray[0][2] === "wait") {
                 _this.setState({
                     initialized: false,
