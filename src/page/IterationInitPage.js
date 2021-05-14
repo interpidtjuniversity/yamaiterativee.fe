@@ -6,10 +6,11 @@ import {Card} from 'antd'
 import NewServer from "../static/img/home/config/NewServer.png"
 import IterationConfig from "../static/img/home/config/IterationConfig.png"
 import PeopleConfig from "../static/img/home/config/PeopleConfig.png"
-import RequirementConfig from "../static/img/home/config/RequirementConfig.png"
+import SubmitMR from "../static/img/home/config/SubmitMR.png"
 import * as React from "react";
-import CreateServerForm from "./form/CreateServerForm";
-import ConfigChangeForm from "./form/ConfigChangeForm";
+import CreateServerForm from "../form/CreateServerForm";
+import ConfigChangeForm from "../form/ConfigChangeForm";
+import SubmitMRForm from "../form/SubmitMRForm";
 
 const { Cell } = ResponsiveGrid;
 const { Meta } = Card
@@ -19,6 +20,7 @@ class IterationInitPage extends react.Component{
     state = {
         createFormVisible: false,
         modifyConfigFormVisible: false,
+        submitMRFormVisible: false,
     }
 
     constructor(props) {
@@ -52,6 +54,17 @@ class IterationInitPage extends react.Component{
                 modifyConfigFormVisible: false
             })
         }
+
+        this.openSubmitMRFButton = ()=> {
+            this.setState({
+                submitMRFormVisible: true
+            })
+        }
+        this.closeSubmitMRFButton = (reason, e) => {
+            this.setState({
+                submitMRFormVisible: false
+            })
+        }
     }
 
     newServer = () => {
@@ -59,6 +72,9 @@ class IterationInitPage extends react.Component{
     }
     modifyIterationConfig = () => {
         this.openModifyConfigFButton()
+    }
+    submitMR = () => {
+        this.openSubmitMRFButton()
     }
 
     render() {
@@ -131,14 +147,15 @@ class IterationInitPage extends react.Component{
                             cover={
                                 <img
                                     alt="example"
-                                    src={RequirementConfig}
+                                    src={SubmitMR}
                                 />
                             }
                             hoverable={true}
+                            onClick={this.submitMR}
                         >
                             <Meta
-                                title="需求管理"
-                                description="config requirement for this iteration"
+                                title="提交MR"
+                                description="change the code"
                             />
                         </Card>
                     </Cell>
@@ -171,6 +188,19 @@ class IterationInitPage extends react.Component{
                 >
                     <ConfigChangeForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
                                       iterationId={this.iterationId} autoFill={true} formCloseCallBack={this.closeModifyConfigFButton}
+                    />
+                </Drawer>
+
+                <Drawer title="提交MR"
+                        placement="right"
+                        visible={this.state.submitMRFormVisible}
+                        onClose={this.closeSubmitMRFButton}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
+                                      iterationId={this.iterationId} autoFill={true} formCloseCallBack={this.closeSubmitMRFButton}
                     />
                 </Drawer>
             </div>

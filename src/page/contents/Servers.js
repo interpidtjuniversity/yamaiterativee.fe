@@ -11,7 +11,7 @@ import ApplyingBackGround from '../../static/img/home/servers/applying.svg'
 import DeployingBackGround from '../../static/img/home/servers/deploying.svg'
 import IdleBackGround from '../../static/img/home/servers/idle.svg'
 import StoppedBackGround from '../../static/img/home/servers/stopped.svg'
-import CreateServerForm from "../form/CreateServerForm";
+import CreateServerForm from "../../form/CreateServerForm";
 
 import APIFetcher from "../../axios/task/APIFetcher";
 import TaskExecutor from "../../axios/task/TaskExecutor";
@@ -103,7 +103,7 @@ class Servers extends react.Component{
                     deployBranch: this.state.currentServerDeployBranch,
                     serverIP: this.state.currentServerIP,
                     serverEnv: this.state.currentServerEnv,
-                    iterId: this.state.iterId,
+                    iterId: this.state.currentServerIterId,
                 }
                 const _this = this
                 axios.post(_this.DeployAPI ,qs.stringify(data))

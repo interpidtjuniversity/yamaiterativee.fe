@@ -3,11 +3,11 @@ import {Box, Button, Card, Form, Input, ResponsiveGrid, Tab, Table} from "@alifd
 import * as React from "react";
 
 
-import User from "../../data/user";
+import User from "../data/user";
 
-import '../../static/css/home/WorkBench.css';
-import '../../static/css/home/Servers.css';
-import '../../static/css/home/IterationInitPage.css';
+import '../static/css/home/WorkBench.css';
+import '../static/css/home/Servers.css';
+import '../static/css/home/IterationInitPage.css';
 import axios from "axios";
 import qs from "qs";
 
