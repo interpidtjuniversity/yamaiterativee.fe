@@ -400,7 +400,7 @@ class CreateApplicationForm extends react.Component {
                                         >
                                             {
                                                 this.state.allUsers.map((user, index) => {
-                                                    return <Select.Option value={index} key={index}>{user}</Select.Option>
+                                                    return <Select.Option value={user} key={index}>{user}</Select.Option>
                                                 })
                                             }
                                         </Select>

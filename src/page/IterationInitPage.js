@@ -199,8 +199,8 @@ class IterationInitPage extends react.Component{
                             {width: "60%"}
                         }
                 >
-                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
-                                      iterationId={this.iterationId} autoFill={true} formCloseCallBack={this.closeSubmitMRFButton}
+                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch={this.iterBranch}
+                                  iterationId={this.iterationId} env="dev" autoFill={true} formCloseCallBack={this.closeSubmitMRFButton}
                     />
                 </Drawer>
             </div>

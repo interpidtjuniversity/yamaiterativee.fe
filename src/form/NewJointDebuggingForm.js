@@ -27,7 +27,7 @@ class NewJointDebuggingForm extends react.Component {
             "asdasdas":[
                 {"rdm":"cb9d6986b4","appOwner":"interpidtjuniversity","appName":"miniselfop","appServer":"0edef0abb19f11eb9274_interpidtjuniversity.miniselfop.dev","appServerOwner":"interpidtjuniversity","appServerState":3},
                 {"rdm":"cb9d83e3b4","appOwner":"interpidtjuniversity","appName":"miniselfop","appServer":"24391683b27111eba6c5_interpidtjuniversity.miniselfop.dev","appServerOwner":"interpidtjuniversity","appServerState":2}
-                ],
+                ],  
             "fwfefwef":[
                 {"rdm":"cb9d6986b4","appOwner":"interpidtjuniversity","appName":"miniselfop","appServer":"0edef0abb19f11eb9274_interpidtjuniversity.miniselfop.dev","appServerOwner":"interpidtjuniversity","appServerState":3},
                 {"rdm":"cb9d83e3b4","appOwner":"interpidtjuniversity","appName":"miniselfop","appServer":"24391683b27111eba6c5_interpidtjuniversity.miniselfop.dev","appServerOwner":"interpidtjuniversity","appServerState":2}

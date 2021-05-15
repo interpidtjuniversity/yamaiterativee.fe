@@ -35,7 +35,7 @@ class Step extends Component {
     componentDidMount() {
         // if pipeline is running
         let fetcher = new APIFetcher(this.stageStateRequestUrl, this.parser, this.callback)
-        this.e = new TaskExecutor(fetcher, 2000)
+        this.e = new TaskExecutor(fetcher, 5000)
     }
 
     componentWillUnmount() {

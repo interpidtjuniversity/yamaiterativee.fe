@@ -8,16 +8,17 @@ global.menus = [
         title: '工作台',
         icon: 'page',
         key: '/home/workbench'
-    },{
-        title: '我的收藏',
-        icon: 'favorites',
-        key: '/home/favorites',
     },
-    {
-        title: '我的工作项',
-        icon: 'works',
-        key: '/home/work-items',
-    },
+    // {
+    //     title: '我的收藏',
+    //     icon: 'favorites',
+    //     key: '/home/favorites',
+    // },
+    // {
+    //     title: '我的工作项',
+    //     icon: 'works',
+    //     key: '/home/work-items',
+    // },
     {
         title: '迭代',
         icon: 'iterations',
@@ -38,9 +39,9 @@ global.menus = [
         icon: 'servers',
         key: '/home/servers'
     },
-    {
-        title: '流程中心',
-        icon: 'flow-center',
-        key: '/home/flow-center'
-    }
+    // {
+    //     title: '流程中心',
+    //     icon: 'flow-center',
+    //     key: '/home/flow-center'
+    // }
 ]

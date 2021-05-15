@@ -66,7 +66,11 @@ class IterationPage extends Component {
             console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
             let iterEnvActionInfoMountDiv = document.getElementById("iterEnvActionInfoMountDiv")
             ReactDOM.unmountComponentAtNode(iterEnvActionInfoMountDiv)
-            let actions = <IterAction actionData={newVal} iterationId={this.iterationId}/>
+            let actions = <IterAction actionData={newVal} iterationId={this.iterationId}
+                                      iterBranch={this.iterBranch} iterState={this.iterState}
+                                      iterTitle={this.iterTitle} serverType={this.serverType}
+                                      appOwner={this.owner} appName={this.application}
+            />
             ReactDOM.render(actions, iterEnvActionInfoMountDiv)
         }))
 

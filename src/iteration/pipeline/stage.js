@@ -36,12 +36,8 @@ class Stage extends Node {
     this._createText(container);
     this._createSteps(container);
 
-    if (this.actionState === this.const.PipelineStateRunning || this.actionState === this.const.PipelineStateInit) {
-      let stageFetcher = new APIFetcher(this.stageStateRequestUrl, this.parser, this.stageCallback)
-      this.stageE = new TaskExecutor(stageFetcher, 1000)
-    } else {
-      container.css('background', this.const.ColorMap.get(this.stageState))
-    }
+    let stageFetcher = new APIFetcher(this.stageStateRequestUrl, this.parser, this.stageCallback)
+    this.stageE = new TaskExecutor(stageFetcher, 10000)
 
     // let actionFetcher = new APIFetcher(this.actionStateRequestUrl, this.parser, this.actionCallback)
     // this.actionE = new TaskExecutor(actionFetcher, 3000)

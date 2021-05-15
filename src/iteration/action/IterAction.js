@@ -38,6 +38,10 @@ class IterAction extends Component {
         super(props);
         this.actionData = this.props.actionData
         this.iterationId = this.props.iterationId
+        this.iterBranch = this.props.iterBranch
+        this.iterState = this.props.iterState
+        this.appOwner = this.props.appOwner
+        this.appName = this.props.appName
     }
 
     openDialog(id) {
@@ -136,8 +140,8 @@ class IterAction extends Component {
                             {width: "60%"}
                         }
                 >
-                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
-                                  iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({submitMRDev: false})}}
+                    <SubmitMRForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch={this.iterBranch}
+                                  iterationId={this.iterationId} env="dev" autoFill={true} formCloseCallBack={() => {this.setState({submitMRDev: false})}}
                     />
                 </Drawer>
                 <Drawer title="Jar包管理"
@@ -148,7 +152,7 @@ class IterAction extends Component {
                             {width: "60%"}
                         }
                 >
-                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
+                    <SubmitMRForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle}
                                   iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({jarManageDev: false})}}
                     />
                 </Drawer>
