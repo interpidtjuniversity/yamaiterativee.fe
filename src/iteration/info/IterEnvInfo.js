@@ -9,6 +9,7 @@ class IterEnvInfo extends Component{
         super(props);
         this.iterationId = this.props.iterationId
         this.iterEnvInfo = this.props.iterEnvInfo
+        debugger
         this.imageAlt = "null"
     }
 

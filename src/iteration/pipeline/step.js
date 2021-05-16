@@ -22,6 +22,7 @@ class Step extends Component {
         this.actionId = this.props.actionId
         this.iterationId = this.props.iterationId
         this.key = this.stageId+"_"+this.actionId+"_"+this.title
+        this.link = this.props.link
         this.const = new IterationChildrenState()
         this.stageStateRequestUrl = "/api/v1/iteration/"+this.iterationId+"/action/"+this.actionId+"/stage/"+this.stageId+"/step/"+this.stepId+"/state"
     }
@@ -52,7 +53,7 @@ class Step extends Component {
             type: this.const.StepIconMap.get(result),
             color: this.const.ColorMap.get(result)
         })
-        if (result === this.const.StepStateFailure || result === this.const.StepStateFinish ) {
+        if (result === this.const.StepStateFailure || result === this.const.StepStateFinish || result === this.const.StepStateCanceled) {
             this.e.kill()
         }
     }
@@ -63,7 +64,12 @@ class Step extends Component {
                 <div style={{width: 200, position: "absolute"}}>
                     <List.Item key={this.key} title={this.title} media={<Avatar src={this.stepImgSrc}/>}
                                onClick={() => {
-                                   this.openStepLog(this.stageId, this.actionId, this.title)
+                                   if (this.link !== "") {
+                                       const w = window.open('about:blank');
+                                       w.location.href = this.link
+                                   } else {
+                                       this.openStepLog(this.stageId, this.actionId, this.title)
+                                   }
                                }}
                     />
                 </div>

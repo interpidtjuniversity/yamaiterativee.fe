@@ -17,12 +17,13 @@ class IterationChildrenState {
 
     StepStateInit = "Init"
     StepStateRunning = "Running"
+    StepStateCanceled = "Canceled"
     StepStateFinish = "Finish"
     StepStateFailure = "Failure"
     StepStateUnknown = "UnKnown"
 
-    ColorMap = new Map([["Init", "#aaa6a6"],["Running", "#ee7e07"],["Finish", "#1DC11D"],["Error","#FF3333"],["Unknown","#aaa6a6"],["Failure","#FF3333"]])
-    StepIconMap = new Map([["Init", "ellipsis"],["Running","loading"],["Finish","success"],["Failure","error"],["Unknown","ellipsis"]])
+    ColorMap = new Map([["Init", "#aaa6a6"],["Running", "#ee7e07"],["Finish", "#1DC11D"],["Error","#FF3333"],["Unknown","#aaa6a6"],["Failure","#FF3333"],["Canceled","#aaa6a6"]])
+    StepIconMap = new Map([["Init", "ellipsis"],["Running","loading"],["Finish","success"],["Failure","error"],["Unknown","ellipsis"],["Canceled", "ellipsis"]])
 }
 
 

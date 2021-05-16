@@ -27,6 +27,7 @@ class SubmitMRForm extends react.Component {
         this.appName=this.props.appName
         this.GetAppAllWhiteBranchesAPI = "/api/v1/home/application/branches/all/white"
         this.GetIterationAllUsersAPI = "/api/v1/home/iterations/"+this.iterationId+"/users"
+        this.CreateMergeRequestAPI = "/api/v1/home/iterations/createmr/1"
 
         if (this.env === "dev" || this.env === "itg") {
             this.envMRTargetBranch = this.iterBranch
@@ -76,10 +77,10 @@ class SubmitMRForm extends react.Component {
         value.mrCodeReviews = JSON.stringify(value.mrCodeReviews)
         value.actorName = User.userName
         const _this = this
-        // axios.post(this.CreateServerGroupAPI, qs.stringify(value)).then(function (response) {
-        //     _this.props.formCloseCallBack()
-        // })
-        //     .catch(function (exception) {})
+        axios.post(_this.CreateMergeRequestAPI, qs.stringify(value)).then(function (response) {
+            _this.props.formCloseCallBack()
+        })
+            .catch(function (exception) {})
     };
 
 

@@ -37,7 +37,7 @@ class Stage extends Node {
     this._createSteps(container);
 
     let stageFetcher = new APIFetcher(this.stageStateRequestUrl, this.parser, this.stageCallback)
-    this.stageE = new TaskExecutor(stageFetcher, 10000)
+    this.stageE = new TaskExecutor(stageFetcher, 5000)
 
     // let actionFetcher = new APIFetcher(this.actionStateRequestUrl, this.parser, this.actionCallback)
     // this.actionE = new TaskExecutor(actionFetcher, 3000)
