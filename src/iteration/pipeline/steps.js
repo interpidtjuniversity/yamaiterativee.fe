@@ -15,6 +15,7 @@ class Steps extends Component {
         this.actionId_stageId = this.props.actionId_stageId;
         this.stageId = this.props.stageId
         this.actionId = this.props.actionId
+        this.appName = this.props.appName
         this.baseRequestUrl = "/api/v1/iteration/"+this.iterationId+"/action/"+this.actionId+"/stage/"+this.stageId
         this.state = {
             data : []
@@ -51,7 +52,7 @@ class Steps extends Component {
                     size="small"
                     dataSource={this.state.data}
                     renderItem={(item, i) => (
-                        <Step index={item.index} stepId={item.stepId} title={item.title} stepImgSrc={item.image} stageId={this.stageId} actionId={this.actionId} iterationId={this.iterationId} link={item.link}/>
+                        <Step index={item.index} stepId={item.stepId} title={item.title} stepImgSrc={item.image} stageId={this.stageId} actionId={this.actionId} iterationId={this.iterationId} link={item.link} appName={this.appName}/>
                     )}
                 />
             </div>

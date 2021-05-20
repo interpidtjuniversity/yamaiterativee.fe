@@ -53,7 +53,7 @@ class IterationPage extends Component {
                 return (
                     <Collapse style={{marginLeft:100, width:1400, background: "#F8F8F8"}}>
                         <Panel title={item.actionInfo}>
-                            <Pipeline iterationId={this.iterationId} pipelineData={item} stepLogRef={this.stepLogRef} pipelineDataCanvasId={index}/>
+                            <Pipeline iterationId={this.iterationId} pipelineData={item} stepLogRef={this.stepLogRef} pipelineDataCanvasId={index} appName={this.application}/>
                         </Panel>
                     </Collapse>
                     )
@@ -88,7 +88,7 @@ class IterationPage extends Component {
         return (
             <div>
                 <IterationEnv iterationId={this.iterationId}/>
-                <StepLog onRef={this.stepLogOnRef}/>
+                <StepLog onRef={this.stepLogOnRef} appName={this.application}/>
 
                 {/*挂载操作按钮*/}
                 <div id={"iterEnvActionInfoMountDiv"}/>

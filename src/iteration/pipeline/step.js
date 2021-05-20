@@ -4,6 +4,8 @@ import store from "../../store/config";
 import TaskExecutor from "../../axios/task/TaskExecutor";
 import APIFetcher from "../../axios/task/APIFetcher";
 import IterationChildrenState from "./const";
+import axios from "axios";
+import qs from "qs";
 
 class Step extends Component {
 
@@ -23,19 +25,26 @@ class Step extends Component {
         this.iterationId = this.props.iterationId
         this.key = this.stageId+"_"+this.actionId+"_"+this.title
         this.link = this.props.link
+        this.appName = this.props.appName
         this.const = new IterationChildrenState()
-        this.stageStateRequestUrl = "/api/v1/iteration/"+this.iterationId+"/action/"+this.actionId+"/stage/"+this.stageId+"/step/"+this.stepId+"/state"
+        this.stepStateRequestUrl = "/api/v1/iteration/"+this.iterationId+"/action/"+this.actionId+"/stage/"+this.stageId+"/step/"+this.stepId+"/state"
+        this.stepLogRequestUrl = "/api/v1/iteration/"+this.iterationId+"/action/"+this.actionId+"/stage/"+this.stageId+"/step/"+this.stepId+"/log"
     }
 
     openStepLog(stageId, actionId, title) {
-        const data = "stageId is:" + stageId + " actionId is:" + actionId + " title is:" + title
-        let stepLog = store.getState().stepLogReducer.stepLogRef
-        stepLog.onOpen(data,data)
+        const _this = this
+        let data = {appName: this.appName}
+        axios.post(_this.stepLogRequestUrl, qs.stringify(data))
+            .then(function (response){
+                let stepLog = store.getState().stepLogReducer.stepLogRef
+                stepLog.onOpen(title, response.data)
+            })
+            .catch(function (error){})
     }
 
     componentDidMount() {
         // if pipeline is running
-        let fetcher = new APIFetcher(this.stageStateRequestUrl, this.parser, this.callback)
+        let fetcher = new APIFetcher(this.stepStateRequestUrl, this.parser, this.callback)
         this.e = new TaskExecutor(fetcher, 5000)
     }
 

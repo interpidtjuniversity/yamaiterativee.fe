@@ -17,6 +17,7 @@ class StepsContainer extends Component {
         this.parent = document.getElementById(this.actionId_stageId);
         this.stageId = this.props.stageId
         this.actionId = this.props.actionId
+        this.appName = this.props.appName
     }
 
     onClose = () => {
@@ -30,7 +31,7 @@ class StepsContainer extends Component {
                      safeNode={this.parent}
                      onRequestClose={this.onClose}>
                     <span className="steps-overlay">
-                        <Steps iterationId={this.iterationId} actionId_stageId={this.actionId_stageId} stageId={this.stageId} actionId={this.actionId}/>
+                        <Steps iterationId={this.iterationId} actionId_stageId={this.actionId_stageId} stageId={this.stageId} actionId={this.actionId} appName={this.appName}/>
                     </span>
             </Overlay>
         );
