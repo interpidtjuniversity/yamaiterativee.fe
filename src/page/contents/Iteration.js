@@ -35,7 +35,7 @@ class Iteration extends react.Component{
                     application: response.data.application,
                     iterBranch: response.data.iterBranch,
                     iterTitle: response.data.iterTitle,
-                    terState: response.data.iterState,
+                    iterState: response.data.iterState,
                     serverType: response.data.serverType,
                 })
             }
@@ -43,6 +43,7 @@ class Iteration extends react.Component{
     }
 
     render() {
+        debugger
         return(
             <IterationManager initialized={this.state.initialized} iterationId={this.iterationId}
                               application={this.state.application} owner={this.state.owner} iterBranch={this.state.iterBranch}

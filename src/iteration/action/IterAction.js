@@ -4,6 +4,7 @@ import SubmitMRForm from "../../form/SubmitMRForm";
 import NewJointDebuggingForm from "../../form/NewJointDebuggingForm";
 import TriggerDevPipelineForm from "../../form/TriggerDevPipelineForm";
 import ConfigChangeForm from "../../form/ConfigChangeForm";
+import CreateServerForm from "../../form/CreateServerForm";
 
 
 class IterAction extends Component {
@@ -45,6 +46,7 @@ class IterAction extends Component {
         this.iterState = this.props.iterState
         this.appOwner = this.props.appOwner
         this.appName = this.props.appName
+        this.serverType = this.props.serverType
     }
 
     openDialog(id) {
@@ -191,8 +193,8 @@ class IterAction extends Component {
                             {width: "60%"}
                         }
                 >
-                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
-                                  iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({applyServerDev: false})}}
+                    <CreateServerForm appOwner={this.appOwner} appName={this.appOwner} iterId={this.iterationId} iterTitle={this.iterTitle} iterState={this.iterState}
+                                  iterationId={this.iterationId} serverImage={this.serverType} autoFill={true} formCloseCallBack={() => {this.setState({applyServerDev: false})}}
                     />
                 </Drawer>
                 <Drawer title="新建联调环境"

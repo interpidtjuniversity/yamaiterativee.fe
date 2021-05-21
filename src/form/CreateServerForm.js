@@ -17,11 +17,13 @@ class CreateServerForm extends react.Component {
     }
 
     constructor(props) {
-        super();
-        this.serverType = [{id:0,title:"开发环境"}, {id:1,title:"稳定环境"}, {id:2,title:"测试环境"}, {id:3,title:"预发环境"}, {id:4,title:"正式环境"}]
+        super(props);
+        debugger
+        this.serverType = [{id:0,title:"开发环境"}, {id:1,title:"测试环境"}, {id:2,title:"稳定环境"}]
         this.NewServerAPI = "/api/v1/home/server/newserver/new"
         const _this = this
         this.onSubmit = (value) => {
+            value.env = "env"
             axios.post(this.NewServerAPI, qs.stringify(value)).then(function (response) {
                 _this.props.formCloseCallBack()
             }).catch(function (exception) {})
