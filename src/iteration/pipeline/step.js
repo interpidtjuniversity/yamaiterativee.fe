@@ -37,7 +37,7 @@ class Step extends Component {
         axios.post(_this.stepLogRequestUrl, qs.stringify(data))
             .then(function (response){
                 let stepLog = store.getState().stepLogReducer.stepLogRef
-                stepLog.onOpen(title, response.data)
+                stepLog.onOpen(title, response.data, _this.actionId, _this.stageId, _this.stepId)
             })
             .catch(function (error){})
     }
@@ -71,7 +71,7 @@ class Step extends Component {
         return (
             <div style={{height: 60}}>
                 <div style={{width: 200, position: "absolute"}}>
-                    <List.Item key={this.key} title={this.title} media={<Avatar src={this.stepImgSrc}/>}
+                    <List.Item key={this.stepId} title={this.title} media={<Avatar src={this.stepImgSrc}/>}
                                onClick={() => {
                                    if (this.link !== "") {
                                        const w = window.open('about:blank');

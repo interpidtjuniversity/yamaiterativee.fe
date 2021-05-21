@@ -36,9 +36,6 @@ class Steps extends Component {
     }
 
     openStepLog(stageId, actionId, title) {
-        const data = "stageId is:" + stageId + " actionId is:" + actionId + " title is:" + title
-        let stepLog = store.getState().stepLogReducer.stepLogRef
-        stepLog.onOpen(data,data)
     }
 
     render() {

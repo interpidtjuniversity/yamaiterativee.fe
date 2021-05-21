@@ -38,11 +38,11 @@ pre.source li {
 }
 
 pre.source span.fc {
-    background-color:#ccffcc;
+    background: #ccffcc;
 }
 
 pre.source span.nc {
-    background-color:#ffaaaa;
+    background: #ffaaaa;
 }
 
 pre.source span.pc {
@@ -153,4 +153,22 @@ table.coverage tfoot td.ctr2 {
 
 .right {
     float:right;
+}
+
+
+.avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.rectangular {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.iframe-hack {
+    width: 100%;
+    height: 650px;
 }
