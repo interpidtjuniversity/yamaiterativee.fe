@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Button, Box, Drawer} from '@alifd/next';
 import SubmitMRForm from "../../form/SubmitMRForm";
 import NewJointDebuggingForm from "../../form/NewJointDebuggingForm";
+import TriggerDevPipelineForm from "../../form/TriggerDevPipelineForm";
+import ConfigChangeForm from "../../form/ConfigChangeForm";
 
 
 class IterAction extends Component {
@@ -11,7 +13,7 @@ class IterAction extends Component {
         submitMRDev: false,
         jarManageDev: false,
         changeConfigDev: false,
-        tigerPipelineDev: false,
+        triggerPipelineDev: false,
         applyServerDev: false,
         newJointDebuggingDev: false,
 
@@ -38,6 +40,7 @@ class IterAction extends Component {
         super(props);
         this.actionData = this.props.actionData
         this.iterationId = this.props.iterationId
+        this.iterTitle = this.props.iterTitle
         this.iterBranch = this.props.iterBranch
         this.iterState = this.props.iterState
         this.appOwner = this.props.appOwner
@@ -58,8 +61,8 @@ class IterAction extends Component {
             case "changeConfigDev":
                 this.setState({changeConfigDev: true})
                 break
-            case "tigerPipelineDev":
-                this.setState({tigerPipelineDev: true})
+            case "triggerPipelineDev":
+                this.setState({triggerPipelineDev: true})
                 break
             case "applyServerDev":
                 this.setState({applyServerDev: true})
@@ -164,20 +167,20 @@ class IterAction extends Component {
                             {width: "60%"}
                         }
                 >
-                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
-                                  iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({changeConfigDev: false})}}
+                    <ConfigChangeForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch={this.iterBranch}
+                                            iterationId={this.iterationId} env="dev" autoFill={true} formCloseCallBack={() => {this.setState({submitMRDev: false})}}
                     />
                 </Drawer>
                 <Drawer title="触发pipeline"
                         placement="right"
-                        visible={this.state.tigerPipelineDev}
-                        onClose={() => {this.setState({tigerPipelineDev: false})}}
+                        visible={this.state.triggerPipelineDev}
+                        onClose={() => {this.setState({triggerPipelineDev: false})}}
                         style={
                             {width: "60%"}
                         }
                 >
-                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
-                                  iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({tigerPipelineDev: false})}}
+                    <TriggerDevPipelineForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch={this.iterBranch}
+                                  iterationId={this.iterationId} env="dev" autoFill={true} formCloseCallBack={() => {this.setState({submitMRDev: false})}}
                     />
                 </Drawer>
                 <Drawer title="申请服务器"

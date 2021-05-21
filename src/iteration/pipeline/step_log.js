@@ -429,7 +429,7 @@ class SimpleLog extends Component {
                         <div style={{ minHeight: 1200, background: "#fff" }}>
                             <pre>
                                 {
-                                    this.log.length > 0 && (
+                                    this.log !== null && this.log.length > 0 && (
                                         this.log.map((value, index) => {
                                             return (<div key={index}><span>{value.line}</span><br/></div>)
                                         })
