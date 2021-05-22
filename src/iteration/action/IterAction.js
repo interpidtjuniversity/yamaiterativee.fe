@@ -16,7 +16,7 @@ class IterAction extends Component {
         changeConfigDev: false,
         triggerPipelineDev: false,
         applyServerDev: false,
-        newJointDebuggingDev: false,
+        jointDebuggingDev: false,
 
         finishItg: false,
         submitMRItg: false,
@@ -69,8 +69,8 @@ class IterAction extends Component {
             case "applyServerDev":
                 this.setState({applyServerDev: true})
                 break
-            case "newJointDebuggingDev":
-                this.setState({newJointDebuggingDev: true})
+            case "jointDebuggingDev":
+                this.setState({jointDebuggingDev: true})
                  break
             case "finishItg":
                 this.setState({finishItg:true})
@@ -193,19 +193,19 @@ class IterAction extends Component {
                             {width: "60%"}
                         }
                 >
-                    <CreateServerForm appOwner={this.appOwner} appName={this.appOwner} iterId={this.iterationId} iterTitle={this.iterTitle} iterState={this.iterState}
+                    <CreateServerForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterState={this.iterState}
                                   iterationId={this.iterationId} serverImage={this.serverType} autoFill={true} formCloseCallBack={() => {this.setState({applyServerDev: false})}}
                     />
                 </Drawer>
-                <Drawer title="新建联调环境"
+                <Drawer title="联调环境"
                         placement="right"
-                        visible={this.state.newJointDebuggingDev}
-                        onClose={() => {this.setState({newJointDebuggingDev: false})}}
+                        visible={this.state.jointDebuggingDev}
+                        onClose={() => {this.setState({jointDebuggingDev: false})}}
                         style={
-                            {width: "60%"}
+                            {width: "100%"}
                         }
                 >
-                    <NewJointDebuggingForm iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({newJointDebuggingDev: false})}}
+                    <NewJointDebuggingForm iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({jointDebuggingDev: false})}}
                     />
                 </Drawer>
 
