@@ -74,7 +74,7 @@ class IterEnvInfo extends Component{
                     <div style={{width: 300, height:100, marginLeft: 400}}>
                         <i className={"big green sync icon"} style={{marginTop: 30, position: "absolute"}}/>
                         <div className={"ui teal large image label"} style={{marginLeft:40, marginTop:25}}>
-                            <div className="detail">变更行覆盖率: {this.iterEnvInfo.changeLineCoverage}</div>
+                            <div className="detail">变更行覆盖率: {this.iterEnvInfo.changeLineCoverage}%</div>
                         </div>
                     </div>
                 </div>

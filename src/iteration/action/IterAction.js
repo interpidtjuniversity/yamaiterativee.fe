@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import {Button, Box, Drawer} from '@alifd/next';
+import {Button, Box, Drawer, Message} from '@alifd/next';
+import { Popconfirm, message } from 'antd';
 import SubmitMRForm from "../../form/SubmitMRForm";
 import NewJointDebuggingForm from "../../form/NewJointDebuggingForm";
 import TriggerDevPipelineForm from "../../form/TriggerDevPipelineForm";
 import ConfigChangeForm from "../../form/ConfigChangeForm";
 import CreateServerForm from "../../form/CreateServerForm";
 
+import axios from "axios";
+import qs from "qs";
 
 class IterAction extends Component {
 
@@ -21,12 +24,13 @@ class IterAction extends Component {
         finishItg: false,
         submitMRItg: false,
         jarManageItg: false,
-        tigerPipelineItg: false,
+        triggerPipelineItg: false,
+        syncMaster: false,
 
         finishPre: false,
         submitMRPre: false,
         jarManagePre: false,
-        tigerPipelinePre: false,
+        triggerPipelinePre: false,
 
         finishGray: false,
         whiteList: false,
@@ -47,6 +51,15 @@ class IterAction extends Component {
         this.appOwner = this.props.appOwner
         this.appName = this.props.appName
         this.serverType = this.props.serverType
+        this.DevAdvanceAPI = "/api/v1/home/iterations/advance/dev"
+        this.ItgAdvanceAPI = "/api/v1/home/iterations/advance/itg"
+        this.PreAdvanceAPI = "/api/v1/home/iterations/advance/pre"
+        this.GrayAdvanceAPI = "/api/v1/home/iterations/advance/gray"
+        this.syncMasterAPI = "/api/v1/home/iterations/syncMaster"
+
+        this.devHideMap = new Map([["finishDev", true],["submitMRDev",true],["jarManageDev",true],["changeConfigDev",false],["triggerPipelineDev",true],["applyServerDev",false],["jointDebuggingDev",false]])
+        this.itgHideMap = new Map([["finishItg", true],["submitMRItg",true],["jarManageItg",true],["triggerPipelineItg",true],["syncMaster", true]])
+        this.preHideMap = new Map([["finishPre", true],["submitMRPre",true],["jarManagePre",true],["triggerPipelinePre",true]])
     }
 
     openDialog(id) {
@@ -81,8 +94,11 @@ class IterAction extends Component {
             case "jarManageItg" :
                 this.setState({jarManageItg: true})
                 break
-            case "tigerPipelineItg":
-                this.setState({tigerPipelineItg:true})
+            case "triggerPipelineItg":
+                this.setState({triggerPipelineItg:true})
+                break
+            case "syncMaster":
+                this.setState({syncMaster:true})
                 break
             case "finishPre":
                 this.setState({finishPre:true})
@@ -93,8 +109,8 @@ class IterAction extends Component {
             case "jarManagePre":
                 this.setState({jarManagePre:true})
                 break
-            case "tigerPipelinePre":
-                this.setState({tigerPipelinePre:true})
+            case "triggerPipelinePre":
+                this.setState({triggerPipelinePre:true})
                 break
             case "finishGray":
                 this.setState({finishGray:true})
@@ -114,9 +130,97 @@ class IterAction extends Component {
         }
     }
 
+    syncMaster = (e) => {
+        const _this = this
+        let value = {
+            iterId : _this.iterationId
+        }
+        axios.post(_this.syncMasterAPI, qs.stringify(value))
+            .then(function (response) {
+                if (response.data === "error") {
+                    Message.error("同步master代码错误, 请检查冲突!")
+                } else {
+                    Message.success("同步master代码成功!")
+                }
+            }).catch(function (error){})
+        this.setState({syncMaster: false})
+    }
+    syncMasterCancel = (e) => {
+        this.setState({syncMaster: false})
+    }
+
+    advance = (type, e) => {
+        debugger
+        const _this = this
+        let value = {
+            iterId: _this.iterationId
+        }
+        let api
+        let state
+        switch (type){
+            case "dev":
+                api = _this.DevAdvanceAPI
+                break
+            case "itg":
+                api = _this.ItgAdvanceAPI
+                break
+            case "pre":
+                api = _this.PreAdvanceAPI
+                break
+            case "gray":
+                api = _this.GrayAdvanceAPI
+                break
+        }
+        axios.post(api, qs.stringify(value))
+            .then(function (response) {
+                if (type==="itg" && response === "error") {
+                    let msg = "当前分支:"+_this.iterBranch+"合并到master有冲突,请检查!"
+                    Message.error(msg)
+                } else if (type === "gray" && response === "error"){
+                    let msg = "当前迭代:"+_this.iterationId+"灰度未完成,请先推进!"
+                    Message.error(msg)
+                } else {
+                    location.reload([true])
+                }
+            }).catch(function (error){})
+        this.setState({finishDev: false,finishItg: false,finishPre: false,finishGray: false})
+    }
+
+    advanceCancel = (type, e) => {
+        switch (type){
+            case "dev":
+                this.setState({finishDev: false})
+                break
+            case "itg":
+                this.setState({finishItg: false})
+                break
+            case "pre":
+                this.setState({finishPre: false})
+                break
+            case "gray":
+                this.setState({finishProd: false})
+                break
+        }
+    }
+
     render() {
+
         this.actions = this.actionData.map((item, index) => {
-            return <Button type={"primary"} key={index} onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
+            if (item.type < this.iterState) {
+                if (item.type === 0) {
+                    return <Button type={"primary"} key={index} disabled={this.devHideMap.get(item.id)}
+                                   onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
+                } else if (item.type === 1) {
+                    return <Button type={"primary"} key={index} disabled={this.itgHideMap.get(item.id)}
+                                   onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
+                } else if (item.type === 2) {
+                    return <Button type={"primary"} key={index} disabled={this.preHideMap.get(item.id)}
+                                   onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
+                }
+            } else {
+                return <Button type={"primary"} key={index}
+                               onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
+            }
         })
 
         return (
@@ -125,18 +229,17 @@ class IterAction extends Component {
                     {this.actions}
                 </Box>
                 {/*dev*/}
-                <Drawer title="完成开发阶段"
-                        placement="right"
-                        visible={this.state.finishDev}
-                        onClose={() => {this.setState({finishDev: false})}}
-                        style={
-                            {width: "60%"}
-                        }
-                >
-                    <SubmitMRForm appOwner={this.owner} appName={this.application} iterId={this.iterationId} iterTitle={this.iterTitle}
-                                  iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({finishDev: false})}}
-                    />
-                </Drawer>
+                <Popconfirm
+                    title="确认要完成开发阶段吗?"
+                    placement="bottomLeft"
+                    visible={this.state.finishDev}
+                    onConfirm={this.advance.bind(this, "dev")}
+                    onCancel={this.advanceCancel.bind(this, "dev")}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{width: 100, height:100}}
+                />
+
                 <Drawer title="提交MR"
                         placement="right"
                         visible={this.state.submitMRDev}
@@ -157,7 +260,7 @@ class IterAction extends Component {
                             {width: "60%"}
                         }
                 >
-                    <SubmitMRForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle}
+                    <SubmitMRForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} env="dev"
                                   iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({jarManageDev: false})}}
                     />
                 </Drawer>
@@ -182,7 +285,7 @@ class IterAction extends Component {
                         }
                 >
                     <TriggerDevPipelineForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch={this.iterBranch}
-                                  iterationId={this.iterationId} env="dev" autoFill={true} formCloseCallBack={() => {this.setState({submitMRDev: false})}}
+                                  iterationId={this.iterationId} iterState={this.iterState} env="dev" autoFill={true} formCloseCallBack={() => {this.setState({triggerPipelineDev: false})}}
                     />
                 </Drawer>
                 <Drawer title="申请服务器"
@@ -209,9 +312,125 @@ class IterAction extends Component {
                     />
                 </Drawer>
 
+                {/*itg*/}
+                <Popconfirm
+                    title="确认要完成集成阶段吗?"
+                    placement="bottomLeft"
+                    visible={this.state.finishItg}
+                    onConfirm={this.advance.bind(this, "itg")}
+                    onCancel={this.advanceCancel.bind(this, "itg")}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{width: 100, height:100}}
+                />
+                <Drawer title="提交MR"
+                        placement="right"
+                        visible={this.state.submitMRItg}
+                        onClose={() => {this.setState({submitMRItg: false})}}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <SubmitMRForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch={this.iterBranch}
+                                  iterationId={this.iterationId} env="itg" autoFill={true} formCloseCallBack={() => {this.setState({submitMRItg: false})}}
+                    />
+                </Drawer>
+                <Drawer title="Jar包管理"
+                        placement="right"
+                        visible={this.state.jarManageItg}
+                        onClose={() => {this.setState({jarManageItg: false})}}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <SubmitMRForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} env="itg"
+                                  iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({jarManageItg: false})}}
+                    />
+                </Drawer>
+                <Drawer title="触发pipeline"
+                        placement="right"
+                        visible={this.state.triggerPipelineItg}
+                        onClose={() => {this.setState({triggerPipelineItg: false})}}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <TriggerDevPipelineForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch={this.iterBranch}
+                                            iterationId={this.iterationId} iterState={this.iterState} env="itg" autoFill={true} formCloseCallBack={() => {this.setState({triggerPipelineItg: false})}}
+                    />
+                </Drawer>
+                <Popconfirm
+                    title="现在同步master代码吗?"
+                    placement="bottomLeft"
+                    visible={this.state.syncMaster}
+                    onConfirm={this.syncMaster}
+                    onCancel={this.syncMasterCancel}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{marginLeft:500}}
+                />
 
 
                 {/*pre*/}
+                <Popconfirm
+                    title="确认要完成预发阶段吗?"
+                    placement="bottomLeft"
+                    visible={this.state.finishPre}
+                    onConfirm={this.advance.bind(this, "pre")}
+                    onCancel={this.advanceCancel.bind(this, "pre")}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{width: 100, height:100}}
+                />
+                <Drawer title="提交MR"
+                        placement="right"
+                        visible={this.state.submitMRPre}
+                        onClose={() => {this.setState({submitMRPre: false})}}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <SubmitMRForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch={this.iterBranch}
+                                  iterationId={this.iterationId} env="pre" autoFill={true} formCloseCallBack={() => {this.setState({submitMRPre: false})}}
+                    />
+                </Drawer>
+                <Drawer title="Jar包管理"
+                        placement="right"
+                        visible={this.state.jarManagePre}
+                        onClose={() => {this.setState({jarManagePre: false})}}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <SubmitMRForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} env="pre"
+                                  iterationId={this.iterationId} autoFill={true} formCloseCallBack={() => {this.setState({jarManagePre: false})}}
+                    />
+                </Drawer>
+                <Drawer title="触发pipeline"
+                        placement="right"
+                        visible={this.state.triggerPipelinePre}
+                        onClose={() => {this.setState({triggerPipelinePre: false})}}
+                        style={
+                            {width: "60%"}
+                        }
+                >
+                    <TriggerDevPipelineForm appOwner={this.appOwner} appName={this.appName} iterId={this.iterationId} iterTitle={this.iterTitle} iterBranch="master"
+                                            iterationId={this.iterationId} iterState={this.iterState} env="pre" autoFill={true} formCloseCallBack={() => {this.setState({triggerPipelinePre: false})}}
+                    />
+                </Drawer>
+
+                {/*gary*/}
+                <Popconfirm
+                    title="确认要完成灰度阶段吗?"
+                    placement="bottomLeft"
+                    visible={this.state.finishPre}
+                    onConfirm={this.advance.bind(this, "gray")}
+                    onCancel={this.advanceCancel.bind(this, "gray")}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{width: 100, height:100}}
+                />
+
             </div>
         )
     }
