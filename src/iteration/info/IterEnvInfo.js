@@ -147,6 +147,7 @@ class IterEnvInfo extends Component{
                     <Box style={{marginTop:"20%"}}>
                         <div>
                             <Progress
+                                width={200}
                                 strokeColor={{
                                     '0%': '#e92910',
                                     '100%': '#87d068',
@@ -158,10 +159,11 @@ class IterEnvInfo extends Component{
                                     } else if (this.state.rollBackGrayState === true) {
                                         return <Spin>回滚执行中</Spin>
                                     } else {
-                                        return `${percent}%`
+                                        return `已灰度${percent}%`
                                     }
                             }}/>
                         </div>
+                        <div></div>
                     </Box>
                 </Box>
             )

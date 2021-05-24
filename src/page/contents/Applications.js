@@ -13,6 +13,9 @@ import APIFetcher from "../../axios/task/APIFetcher";
 import TaskExecutor from "../../axios/task/TaskExecutor";
 import axios from "axios";
 import qs from "qs";
+import AvatarList from "ant-design-pro/lib/AvatarList";
+
+require("../../static/css/home/Iterations.css")
 
 class Applications extends react.Component{
 
@@ -20,6 +23,8 @@ class Applications extends react.Component{
         super(props);
         this.state = {
             createFormVisible: false,
+            applications: [],
+            applicationsShow: [],
         }
 
         this.openCreateApplicationFButton = ()=> {
@@ -40,16 +45,13 @@ class Applications extends react.Component{
                 span: 14
             }
         };
+
+        this.GetAllUserApplicationAPI = "/api/v1/home/application/user/"+User.userName+"/all"
     }
 
 
     nextApplicationPage = (value) => {
-        let data;
-        if (value === 1) {
-            data = application1
-        } else if (value === 2) {
-            data = application2
-        }
+        let data = this.state.applications.slice((value-1)*6, value*6)
 
         for(let i=0; i < 6; i++) {
             let parentId = "Applications-application-" + i;
@@ -63,7 +65,6 @@ class Applications extends react.Component{
                     latestIteration={data[i].latestIteration}
                     members={data[i].members}
                     owner={data[i].owner}
-                    createdTime={data[i].createdTime}
                     icon={data[i].icon}
                     index={data[i].index}
                 />
@@ -73,15 +74,23 @@ class Applications extends react.Component{
     }
 
     componentDidMount() {
-        this.nextApplicationPage(1);
+        const _this = this
+        axios.get(this.GetAllUserApplicationAPI).then(function (response) {
+            let show = response.data.slice(0, 6)
+            _this.setState({
+                applications: response.data,
+                applicationsShow: show,
+            })
+            _this.nextApplicationPage(1);
+        }).catch(function (error){})
     }
 
     render() {
         return(
             <div className="list-item">
                 <Box direction="row" style={{width:"100%", height:"100%"}}>
-                    <Box direction="column" style={{width:"85%", height:"100%", background:"orange"}}>
-                        <Box className="box-h90p box" direction="column" style={{background:"red"}}>
+                    <Box direction="column" style={{width:"85%", height:"100%"}}>
+                        <Box className="box-h90p box" direction="column">
                             <Box className="box-h2p" direction="row">
                                 <Box className="box-w33">
                                     <div id="Applications-application-0"/>
@@ -105,11 +114,11 @@ class Applications extends react.Component{
                                 </Box>
                             </Box>
                         </Box>
-                        <Box className="box-h10p box" style={{background:"greenyellow"}}>
-                            <Pagination size={"large"} pageSize={6} total={10} defaultCurrent={1} onChange={this.nextApplicationPage} style={{marginLeft:"auto"}}/>
+                        <Box className="box-h10p box">
+                            <Pagination size={"large"} pageSize={6} total={this.state.applications.length} defaultCurrent={1} onChange={this.nextApplicationPage} style={{marginLeft:"auto"}}/>
                         </Box>
                     </Box>
-                    <Box direction="column" style={{height:"100%", width:"15%", background:"green"}}>
+                    <Box direction="column" style={{height:"100%", width:"15%"}}>
                         <Button size="medium" type="primary" onClick={this.openCreateApplicationFButton} style={{width:"50%", marginLeft:"25%"}}>
                             新建应用
                         </Button>
@@ -177,6 +186,16 @@ class CreateApplicationForm extends react.Component {
 
         this.onSubmit = (value) => {
             const _this = this
+            let self = false
+            for(let i=0; i<value.authMembers.length; i++) {
+                if (value.authMembers[i] === User.userName) {
+                    self = true
+                    break
+                }
+            }
+            if (!self) {
+                value.authMembers.push(User.userName)
+            }
             /**
              * appBusinessDomain
              *  1:支付 2:网商 3:门户 4:运营
@@ -278,9 +297,7 @@ class CreateApplicationForm extends react.Component {
         }
 
         this.queryAppDefaultConfigs = (type, key) => {
-            debugger
             const _this = this
-            debugger
             if (key === undefined) {
                 let config = _this.state.defaultConfig
                 config.delete(type)
@@ -314,7 +331,6 @@ class CreateApplicationForm extends react.Component {
 
         this.generateDefaultYamaX = (m) => {
             let yamaX = []
-            debugger
             for(let item of m.values()){
                 for(let i=0; i<item.length; i++) {
                     yamaX.push(item[i])
@@ -567,11 +583,17 @@ class Application extends react.Component {
     }
 
     render() {
+        if (this.latestIteration === 0) {
+            this.latestIteration = "无"
+        }
+        if (this.repository === "") {
+            this.repository = "无"
+        }
         return (
             <div>
                 <Card className="free-card" free>
                     <Card.Media
-                        style={{ height: 140, backgroundImage:`url(${this.icon})`, backgroundSize:'50% 50%'}}
+                        style={{ height: 140, backgroundImage:`url(${this.icon})`, backgroundSize:'90% 90%'}}
                     />
                     <Card.Header
                         title={this.applicationName}
@@ -582,15 +604,24 @@ class Application extends react.Component {
                         <div>应用Id: {this.applicationId}</div>
                         <div>应用名: {this.applicationName}</div>
                         <div>代码仓库: {this.repository}</div>
-                        <div>应用成员: {this.members}</div>
                         <div>创建人: {this.owner}</div>
-                        <div>创建时间: {this.createdTime}</div>
                         <div>最近迭代: {this.latestIteration}</div>
+                        <div className="iterations-box-wrapper">
+                            <AvatarList size="default" maxLength={3} excessItemsStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }} style={{margin: "0 auto"}}>
+                                {
+                                    this.members.map((member, index) => (
+                                        <AvatarList.Item
+                                            tips={member.name}
+                                            src={member.url}
+                                        />
+                                    ))
+                                }
+                            </AvatarList>
+                        </div>
                     </Card.Content>
                     <Card.Actions>
                     </Card.Actions>
                 </Card>
-
             </div>
         )
     }

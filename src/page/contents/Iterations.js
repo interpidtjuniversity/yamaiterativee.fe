@@ -136,8 +136,8 @@ class Iterations extends react.Component{
                         <p>{item.content}</p>
                         <p>应用: {item.owner}.{item.application}</p>
                         <p>阶段: {item.state}</p>
-                        <div>
-                            <AvatarList size="default" maxLength={3} excessItemsStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                        <div className="iterations-box-wrapper">
+                            <AvatarList size="default" maxLength={3} excessItemsStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }} style={{margin: "0 auto"}}>
                                 {
                                     item.members.map((member, index) => (
                                         <AvatarList.Item
