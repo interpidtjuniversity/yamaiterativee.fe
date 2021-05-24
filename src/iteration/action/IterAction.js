@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Button, Box, Drawer, Message} from '@alifd/next';
-import { Popconfirm, message } from 'antd';
+import {Popconfirm, message, Input} from 'antd';
 import SubmitMRForm from "../../form/SubmitMRForm";
 import NewJointDebuggingForm from "../../form/NewJointDebuggingForm";
 import TriggerDevPipelineForm from "../../form/TriggerDevPipelineForm";
@@ -35,7 +35,9 @@ class IterAction extends Component {
         finishGray: false,
         whiteList: false,
         blackList: false,
-        flowControl: false,
+        advanceGray: false,
+        rollBackGray: false,
+        grayStatus: "success",
 
         finishProd: false,
 
@@ -56,6 +58,8 @@ class IterAction extends Component {
         this.PreAdvanceAPI = "/api/v1/home/iterations/advance/pre"
         this.GrayAdvanceAPI = "/api/v1/home/iterations/advance/gray"
         this.syncMasterAPI = "/api/v1/home/iterations/syncMaster"
+        this.AdvanceGrayAPI = "/api/v1/home/iterations/gray/advance"
+        this.RollBackGrayAPI = "/api/v1/home/iterations/gray/rollback"
 
         this.devHideMap = new Map([["finishDev", true],["submitMRDev",true],["jarManageDev",true],["changeConfigDev",false],["triggerPipelineDev",true],["applyServerDev",false],["jointDebuggingDev",false]])
         this.itgHideMap = new Map([["finishItg", true],["submitMRItg",true],["jarManageItg",true],["triggerPipelineItg",true],["syncMaster", true]])
@@ -121,8 +125,11 @@ class IterAction extends Component {
             case "blackList":
                 this.setState({blackList:true})
                 break
-            case "flowControl":
-                this.setState({flowControl:true})
+            case "advanceGray":
+                this.setState({advanceGray:true})
+                break
+            case "rollBackGray":
+                this.setState({rollBackGray:true})
                 break
             case "finishProd":
                 this.setState({finishProd:true})
@@ -149,6 +156,36 @@ class IterAction extends Component {
         this.setState({syncMaster: false})
     }
 
+    advanceGray = (e) => {
+        this.setState({advanceGray: false})
+        let data = {iterId: this.iterationId}
+        const _this = this
+        axios.post(_this.AdvanceGrayAPI, qs.stringify(data))
+            .then(function (response){})
+            .catch(function (error){})
+        setTimeout(function (){
+            location.reload([true])
+        }, 5000)
+    }
+    advanceGrayCancel = (e) => {
+        this.setState({advanceGray: false})
+    }
+
+    rollBackGray = (e) => {
+        this.setState({rollBackGray: false})
+        let data = {iterId: this.iterationId}
+        const _this = this
+        axios.post(_this.RollBackGrayAPI, qs.stringify(data))
+            .then(function (response){})
+            .catch(function (error){})
+        setTimeout(function (){
+            location.reload([true])
+        }, 5000)
+    }
+    rollBackGrayCancel = (e) => {
+        this.setState({rollBackGray: false})
+    }
+
     advance = (type, e) => {
         debugger
         const _this = this
@@ -173,10 +210,11 @@ class IterAction extends Component {
         }
         axios.post(api, qs.stringify(value))
             .then(function (response) {
-                if (type==="itg" && response === "error") {
+                debugger
+                if (type==="itg" && response.data === "error") {
                     let msg = "当前分支:"+_this.iterBranch+"合并到master有冲突,请检查!"
                     Message.error(msg)
-                } else if (type === "gray" && response === "error"){
+                } else if (type === "gray" && response.data === "error"){
                     let msg = "当前迭代:"+_this.iterationId+"灰度未完成,请先推进!"
                     Message.error(msg)
                 } else {
@@ -198,7 +236,7 @@ class IterAction extends Component {
                 this.setState({finishPre: false})
                 break
             case "gray":
-                this.setState({finishProd: false})
+                this.setState({finishGray: false})
                 break
         }
     }
@@ -423,13 +461,36 @@ class IterAction extends Component {
                 <Popconfirm
                     title="确认要完成灰度阶段吗?"
                     placement="bottomLeft"
-                    visible={this.state.finishPre}
+                    visible={this.state.finishGray}
                     onConfirm={this.advance.bind(this, "gray")}
                     onCancel={this.advanceCancel.bind(this, "gray")}
                     okText="Yes"
                     cancelText="No"
                     style={{width: 100, height:100}}
                 />
+
+                <Popconfirm
+                    title="确认要继续推进吗?"
+                    placement="bottomLeft"
+                    visible={this.state.advanceGray}
+                    onConfirm={this.advanceGray}
+                    onCancel={this.advanceGrayCancel}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{width: 100, height:100}}
+                />
+
+                <Popconfirm
+                    title="确认要回滚吗?"
+                    placement="bottomLeft"
+                    visible={this.state.rollBackGray}
+                    onConfirm={this.rollBackGray}
+                    onCancel={this.rollBackGrayCancel}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{width: 100, height:100}}
+                />
+
 
             </div>
         )
