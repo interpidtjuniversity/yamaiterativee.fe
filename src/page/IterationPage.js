@@ -86,7 +86,7 @@ class IterationPage extends Component {
             let iterEnvBaseInfoMountDiv = document.getElementById("iterEnvBaseInfoMountDiv")
             ReactDOM.unmountComponentAtNode(iterEnvBaseInfoMountDiv)
             if (newVal !== null) {
-                let info = <IterEnvInfo iterEnvInfo={newVal} iterationId={this.iterationId}/>
+                let info = <IterEnvInfo iterEnvInfo={newVal} iterationId={this.iterationId} appName={this.application}/>
                 ReactDOM.render(info, iterEnvBaseInfoMountDiv)
             }
         }))

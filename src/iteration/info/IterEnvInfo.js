@@ -5,6 +5,8 @@ import {Progress, Spin} from "antd";
 import {Box, Button} from "@alifd/next";
 import APIFetcher from "../../axios/task/APIFetcher";
 import TaskExecutor from "../../axios/task/TaskExecutor";
+import axios from "axios";
+import qs from "qs";
 
 
 class IterEnvInfo extends Component{
@@ -12,21 +14,30 @@ class IterEnvInfo extends Component{
     state = {
         advanceGrayState: false,
         rollBackGrayState: false,
-        grayPercent: ""
+        grayPercent: "",
+        qualityScore: "",
+        lineCoverage: ""
     }
 
     constructor(props) {
         super(props);
         this.iterationId = this.props.iterationId
         this.iterEnvInfo = this.props.iterEnvInfo
-        debugger
+        this.appName = this.props.appName
         this.imageAlt = "null"
+        debugger
 
         this.GetIterationAdvanceGrayStateAPI = "/api/v1/home/iterations/gray/state/advance/"+this.iterationId
         this.GetIterationRollBackGrayStateAPI = "/api/v1/home/iterations/gray/state/rollback/"+this.iterationId
+        this.SyncQsAndClcAPI = "/api/v1/iteration/"+this.iterationId+"/envType/"+this.iterEnvInfo.type+"/syncinfo"
     }
 
     componentDidMount() {
+        this.setState({
+            qualityScore: this.iterEnvInfo.qualityScore,
+            lineCoverage: this.iterEnvInfo.changeLineCoverage,
+        })
+
         if (this.iterEnvInfo.type === "grayscale") {
             this.setState({
                 advanceGrayState: this.iterEnvInfo.advanceGrayState,
@@ -65,6 +76,26 @@ class IterEnvInfo extends Component{
                 grayPercent:result.percent
             })
         }
+    }
+
+    syncQsAndClc = (syncKey) => {
+        const _this = this
+        let data = {
+            syncKey: syncKey,
+            appName: this.appName,
+        }
+        axios.post(_this.SyncQsAndClcAPI, qs.stringify(data))
+            .then(function (response) {
+                if (syncKey === "qualityScore") {
+                    _this.setState({
+                        qualityScore: response.data
+                    })
+                } else if (syncKey === "lineCoverage") {
+                    _this.setState({
+                        lineCoverage: response.data
+                    })
+                }
+            })
     }
 
     render() {
@@ -125,15 +156,19 @@ class IterEnvInfo extends Component{
                         </div>
 
                         <div style={{width: 200, position: "absolute", height: 100, marginLeft: 200}}>
-                            <i className={"big green sync icon"} style={{marginTop: 30, position: "absolute"}}/>
+                            <i className={"big green sync icon"} style={{marginTop: 30, position: "absolute"}} onClick={()=>{
+                                this.syncQsAndClc("qualityScore")
+                            }}/>
                             <div className={"ui teal large image label"} style={{marginLeft: 40, marginTop: 25}}>
-                                <div className="detail">质量分: {this.iterEnvInfo.qualityScore}</div>
+                                <div className="detail">质量分: {this.state.qualityScore}</div>
                             </div>
                         </div>
                         <div style={{width: 300, height: 100, marginLeft: 400}}>
-                            <i className={"big green sync icon"} style={{marginTop: 30, position: "absolute"}}/>
+                            <i className={"big green sync icon"} style={{marginTop: 30, position: "absolute"}} onClick={()=>{
+                                this.syncQsAndClc("lineCoverage")
+                            }}/>
                             <div className={"ui teal large image label"} style={{marginLeft: 40, marginTop: 25}}>
-                                <div className="detail">变更行覆盖率: {this.iterEnvInfo.changeLineCoverage}%</div>
+                                <div className="detail">行覆盖率: {this.state.lineCoverage}%</div>
                             </div>
                         </div>
                     </div>
