@@ -7,11 +7,8 @@ import QueueAnim from 'rc-queue-anim';
 import TweenOne from 'rc-tween-one';
 import {Card} from 'antd'
 import User from "../../data/user";
-import featuresCN from "../../data/homepage/iterations/iterations"
 import axios from "axios";
 import {Box, Pagination} from "@alifd/next";
-import servers1 from "../../data/homepage/server/servers-page1";
-import servers2 from "../../data/homepage/server/servers-page2";
 
 
 require("../../static/css/home/Iterations.css")

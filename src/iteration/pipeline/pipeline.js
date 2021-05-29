@@ -18,6 +18,7 @@ class Pipeline extends Component {
         this.pipelineData = props.pipelineData
         this.actionState = props.state
         this.appName = props.appName
+        debugger
         for (let i = 0; i < this.pipelineData['nodes'].length; i++) {
             this.pipelineData['nodes'][i].Class = Stage;
             this.pipelineData['nodes'][i].iterationId = this.iterationId;
@@ -26,6 +27,7 @@ class Pipeline extends Component {
         for (let i = 0; i < this.pipelineData['edges'].length; i++) {
             this.pipelineData['edges'][i].Class = BaseEdge;
         }
+        debugger
     }
     componentDidMount() {
         let root = document.getElementById(this.props.pipelineDataCanvasId);

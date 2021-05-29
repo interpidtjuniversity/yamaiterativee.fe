@@ -49,16 +49,20 @@ class IterationPage extends Component {
             console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
             let iterEnvPipelineInfoMountDiv = document.getElementById("iterEnvPipelineInfoMountDiv")
             ReactDOM.unmountComponentAtNode(iterEnvPipelineInfoMountDiv)
-            let pipelines = newVal.map((item, index) => {
-                return (
-                    <Collapse style={{marginLeft:100, width:1400, background: "#F8F8F8"}}>
-                        <Panel title={item.actionInfo}>
-                            <Pipeline iterationId={this.iterationId} pipelineData={item} stepLogRef={this.stepLogRef} pipelineDataCanvasId={index} appName={this.application}/>
-                        </Panel>
-                    </Collapse>
+            if (newVal !== null) {
+                let pipelines = newVal.map((item, index) => {
+                    return (
+                        <Collapse style={{marginLeft: 100, width: 1400, background: "#F8F8F8"}}>
+                            <Panel title={item.actionInfo}>
+                                <Pipeline iterationId={this.iterationId} pipelineData={item}
+                                          stepLogRef={this.stepLogRef} pipelineDataCanvasId={index}
+                                          appName={this.application}/>
+                            </Panel>
+                        </Collapse>
                     )
-            })
-            ReactDOM.render(pipelines, iterEnvPipelineInfoMountDiv)
+                })
+                ReactDOM.render(pipelines, iterEnvPipelineInfoMountDiv)
+            }
         }))
 
         let iterEnvActionInfoWatcher = watch(store.getState, 'iterEnvActionInfoReducer.iterEnvActionInfo')
@@ -66,12 +70,14 @@ class IterationPage extends Component {
             console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
             let iterEnvActionInfoMountDiv = document.getElementById("iterEnvActionInfoMountDiv")
             ReactDOM.unmountComponentAtNode(iterEnvActionInfoMountDiv)
-            let actions = <IterAction actionData={newVal} iterationId={this.iterationId}
-                                      iterBranch={this.iterBranch} iterState={this.iterState}
-                                      iterTitle={this.iterTitle} serverType={this.serverType}
-                                      appOwner={this.owner} appName={this.application}
-            />
-            ReactDOM.render(actions, iterEnvActionInfoMountDiv)
+            if (newVal !== null) {
+                let actions = <IterAction actionData={newVal} iterationId={this.iterationId}
+                                          iterBranch={this.iterBranch} iterState={this.iterState}
+                                          iterTitle={this.iterTitle} serverType={this.serverType}
+                                          appOwner={this.owner} appName={this.application}
+                />
+                ReactDOM.render(actions, iterEnvActionInfoMountDiv)
+            }
         }))
 
         let iterEnvBaseInfoWatcher = watch(store.getState, 'iterEnvBaseInfoReducer.iterEnvBaseInfo')
@@ -79,8 +85,10 @@ class IterationPage extends Component {
             console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
             let iterEnvBaseInfoMountDiv = document.getElementById("iterEnvBaseInfoMountDiv")
             ReactDOM.unmountComponentAtNode(iterEnvBaseInfoMountDiv)
-            let info = <IterEnvInfo iterEnvInfo={newVal} iterationId={this.iterationId}/>
-            ReactDOM.render(info, iterEnvBaseInfoMountDiv)
+            if (newVal !== null) {
+                let info = <IterEnvInfo iterEnvInfo={newVal} iterationId={this.iterationId}/>
+                ReactDOM.render(info, iterEnvBaseInfoMountDiv)
+            }
         }))
     }
 
