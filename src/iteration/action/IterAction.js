@@ -64,6 +64,7 @@ class IterAction extends Component {
         this.devHideMap = new Map([["finishDev", true],["submitMRDev",true],["jarManageDev",true],["changeConfigDev",false],["triggerPipelineDev",true],["applyServerDev",false],["jointDebuggingDev",false]])
         this.itgHideMap = new Map([["finishItg", true],["submitMRItg",true],["jarManageItg",true],["triggerPipelineItg",true],["syncMaster", true]])
         this.preHideMap = new Map([["finishPre", true],["submitMRPre",true],["jarManagePre",true],["triggerPipelinePre",true]])
+        this.grayHideMap = new Map([["finishGray", true],["whiteList",true],["blackList",true],["advanceGray",true],["rollBackGray",true]])
     }
 
     openDialog(id) {
@@ -161,7 +162,13 @@ class IterAction extends Component {
         let data = {iterId: this.iterationId}
         const _this = this
         axios.post(_this.AdvanceGrayAPI, qs.stringify(data))
-            .then(function (response){})
+            .then(function (response){
+                if (response.data === "error") {
+                    Message.error("灰度执行失败!")
+                } else if (response.data === "warning") {
+                    Message.warning("灰度执行完毕!")
+                }
+            })
             .catch(function (error){})
         setTimeout(function (){
             location.reload([true])
@@ -176,7 +183,13 @@ class IterAction extends Component {
         let data = {iterId: this.iterationId}
         const _this = this
         axios.post(_this.RollBackGrayAPI, qs.stringify(data))
-            .then(function (response){})
+            .then(function (response){
+                if (response.data === "error") {
+                    Message.error("回滚执行失败!")
+                } else if (response.data === "warning") {
+                    Message.warning("回滚执行完毕!")
+                }
+            })
             .catch(function (error){})
         setTimeout(function (){
             location.reload([true])
@@ -253,6 +266,9 @@ class IterAction extends Component {
                                    onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
                 } else if (item.type === 2) {
                     return <Button type={"primary"} key={index} disabled={this.preHideMap.get(item.id)}
+                                   onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
+                } else if (item.type === 3) {
+                    return <Button type={"primary"} key={index} disabled={this.grayHideMap.get(item.id)}
                                    onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
                 }
             } else {

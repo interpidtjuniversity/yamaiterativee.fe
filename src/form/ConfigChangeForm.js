@@ -375,14 +375,28 @@ class ConfigChangeForm extends react.Component {
         const _this = this
         axios.get(this.IterationConfigQueryAPI)
             .then(function (response){
-                _this.setState({
-                    devYamaX: response.data.devConfig,
-                    stableYamaX: response.data.stableConfig,
-                    testYamaX: response.data.testConfig,
-                    preYamaX: response.data.preConfig,
-                    prodYamaX: response.data.prodConfig,
+                if (response.data.devConfig !== null) {
+                    _this.setState({
+                        devYamaX: response.data.devConfig,
+                    })
+                } if (response.data.stableConfig !== null) {
+                    _this.setState({
+                        stableYamaX: response.data.stableConfig,
+                    })
+                } if (response.data.testConfig !== null) {
+                    _this.setState({
+                        testYamaX: response.data.testConfig,
+                    })
+                } if (response.data.preConfig !== null) {
+                    _this.setState({
+                        preYamaX: response.data.preConfig,
+                    })
+                } if (response.data.prodConfig !== null) {
+                    _this.setState({
+                        prodYamaX: response.data.prodConfig,
 
-                })
+                    })
+                }
             })
             .catch(function (error){})
 

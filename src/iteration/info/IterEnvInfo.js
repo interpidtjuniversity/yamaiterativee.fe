@@ -203,7 +203,9 @@ class IterEnvInfo extends Component{
                 </Box>
             )
         } else if (this.iterEnvInfo.type === "prod") {
-
+            return (
+                <div>发布已完成</div>
+            )
         }
         return <div/>
     }
