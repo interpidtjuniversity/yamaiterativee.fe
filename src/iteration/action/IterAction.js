@@ -6,6 +6,7 @@ import NewJointDebuggingForm from "../../form/NewJointDebuggingForm";
 import TriggerDevPipelineForm from "../../form/TriggerDevPipelineForm";
 import ConfigChangeForm from "../../form/ConfigChangeForm";
 import CreateServerForm from "../../form/CreateServerForm";
+import ReleaseSuccess from "../../static/img/home/workbench/release_success.png"
 
 import axios from "axios";
 import qs from "qs";
@@ -57,6 +58,7 @@ class IterAction extends Component {
         this.ItgAdvanceAPI = "/api/v1/home/iterations/advance/itg"
         this.PreAdvanceAPI = "/api/v1/home/iterations/advance/pre"
         this.GrayAdvanceAPI = "/api/v1/home/iterations/advance/gray"
+        this.ProdAdvanceAPI = "/api/v1/home/iterations/advance/prod"
         this.syncMasterAPI = "/api/v1/home/iterations/syncMaster"
         this.AdvanceGrayAPI = "/api/v1/home/iterations/gray/advance"
         this.RollBackGrayAPI = "/api/v1/home/iterations/gray/rollback"
@@ -220,6 +222,9 @@ class IterAction extends Component {
             case "gray":
                 api = _this.GrayAdvanceAPI
                 break
+            case "prod":
+                api = _this.ProdAdvanceAPI
+                break
         }
         axios.post(api, qs.stringify(value))
             .then(function (response) {
@@ -251,6 +256,9 @@ class IterAction extends Component {
             case "gray":
                 this.setState({finishGray: false})
                 break
+            case "prod":
+                this.setState({finishProd: false})
+                break
         }
     }
 
@@ -270,6 +278,8 @@ class IterAction extends Component {
                 } else if (item.type === 3) {
                     return <Button type={"primary"} key={index} disabled={this.grayHideMap.get(item.id)}
                                    onClick={this.openDialog.bind(this, item.id)}>{item.buttonShowWords}</Button>
+                } else if (item.type === 4) {
+                    return <img alt="finishProd" src={ReleaseSuccess} style={{width: "100%", height:"100%"}}/>
                 }
             } else {
                 return <Button type={"primary"} key={index}
@@ -502,6 +512,17 @@ class IterAction extends Component {
                     visible={this.state.rollBackGray}
                     onConfirm={this.rollBackGray}
                     onCancel={this.rollBackGrayCancel}
+                    okText="Yes"
+                    cancelText="No"
+                    style={{width: 100, height:100}}
+                />
+
+                <Popconfirm
+                    title="确认完成发布吗?"
+                    placement="bottomLeft"
+                    visible={this.state.finishProd}
+                    onConfirm={this.advance.bind(this, "prod")}
+                    onCancel={this.advanceCancel.bind(this, "prod")}
                     okText="Yes"
                     cancelText="No"
                     style={{width: 100, height:100}}

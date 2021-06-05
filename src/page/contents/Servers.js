@@ -170,8 +170,8 @@ class Servers extends react.Component{
             <div>
                 <div className="list-item">
                     <Box direction="row" style={{width:"100%", height:"100%"}}>
-                        <Box direction="column" style={{width:"85%", height:"100%", background:"orange"}}>
-                            <Box className="box-h90p box" direction="column" style={{background:"red"}}>
+                        <Box direction="column" style={{width:"85%", height:"100%"}}>
+                            <Box className="box-h90p box" direction="column">
                                 <Box className="box-h2p" direction="row">
                                     <Box className="box-w33">
                                         <div id="Servers-server-0"/>
@@ -195,11 +195,11 @@ class Servers extends react.Component{
                                     </Box>
                                 </Box>
                             </Box>
-                            <Box className="box-h10p box" style={{background:"greenyellow"}}>
+                            <Box className="box-h10p box">
                                 <Pagination size={"large"} pageSize={6} total={this.state.userServers.length} defaultCurrent={1} onChange={this.nextServerPage} style={{marginLeft:"auto"}}/>
                             </Box>
                         </Box>
-                        <Box direction="column" style={{height:"100%", width:"15%", background:"green"}}>
+                        <Box direction="column" style={{height:"100%", width:"15%"}}>
                             <Button size="medium" type="primary" onClick={this.openCreateServerFButton} style={{width:"50%", marginLeft:"25%"}}>
                                 新建服务器
                             </Button>

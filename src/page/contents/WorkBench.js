@@ -566,7 +566,7 @@ class StanderIteration extends react.Component {
                     <Form.Item label="迭代类型">
                         <Input disabled={true} name="iterType" value={this.IterType} />
                     </Form.Item>
-                    <Form.Item label="迭代成员">
+                    <Form.Item label="迭代成员" required requiredMessage="Please specify Iteration member">
                         <Select
                             maxTagCount={2}
                             maxTagPlaceholder={(values: []) => `+${values.length - 2}`}

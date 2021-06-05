@@ -1,5 +1,19 @@
 import react from 'react'
-import {Pagination, Box, Card, Button, Drawer, Form, Select, Input, Icon, ResponsiveGrid, Upload, Table, Checkbox} from '@alifd/next';
+import {
+    Pagination,
+    Box,
+    Card,
+    Button,
+    Drawer,
+    Form,
+    Select,
+    Input,
+    Icon,
+    ResponsiveGrid,
+    Upload,
+    Table,
+    Checkbox,
+} from '@alifd/next';
 import * as React from "react";
 import ReactDOM from "react-dom"
 

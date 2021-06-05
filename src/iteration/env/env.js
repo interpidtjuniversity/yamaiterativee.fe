@@ -7,7 +7,7 @@ import {SetIterEnvPipelineInfo} from "../../store/constants/iter_env_pipelineinf
 import {SetIterEnvActionInfo} from "../../store/constants/iter_env_action_const";
 import {SetIterEnvBaseInfo} from "../../store/constants/iter_env_baseinfo_const";
 
-const envMap = new Map([[0, 'dev'], [1, 'itg'], [2, 'pre'], [3, 'grayscale'], [4, 'release']]);
+const envMap = new Map([[0, 'dev'], [1, 'itg'], [2, 'pre'], [3, 'grayscale'], [4, 'prod'], [5, 'finish']]);
 
 class IterationEnv extends Component{
 
@@ -37,14 +37,27 @@ class IterationEnv extends Component{
                         break
                     }
                 }
-                _this.setState({
-                    steps: stateArray.map((item, index) => <Step.Item key={index} title={item[0]} content={item[1]} onClick={(i,s) => _this.switchStep(index, item[2])}/>),
-                    current: cur
-                })
+                stateArray.splice(stateArray.length-1)
+
+                if (cur < 5) {
+                    _this.setState({
+                        steps: stateArray.map((item, index) => <Step.Item key={index} title={item[0]} content={item[1]}
+                                                                          onClick={(i, s) => _this.switchStep(index, item[2])}/>),
+                        current: cur
+                    })
+                } else {
+                    _this.setState({
+                        steps: stateArray.map((item, index) => <Step.Item key={index} title={item[0]} content={item[1]}
+                                                                          onClick={(i, s) => _this.switchStep(index, item[2])}/>),
+                        current: cur-1
+                    })
+                }
+
 
                 //get env action
                 axios.get(_this.actionRequestUrl+_envMap.get(cur))
                     .then(function (envActionInfo){
+                        debugger
                         store.dispatch({
                             type: SetIterEnvActionInfo,
                             iterEnvActionInfo: envActionInfo.data,
